@@ -1,0 +1,60 @@
+# Memoria operacional canonica
+
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.1910.43
+repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
+governanca=AGENTS.md + .agents/microconceitos.md + .agents/webPageLike.md
+estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
+
+FT-000|nome=Inicializacao operacional|escopo=Tecnico|prioridade=alta|status=concluido|inicio=20260714.1910.43|atualizacao=20260714.2222.00|conclusao=20260714.2222.00
+objetivo=Reconstituir o contexto canonico, auditar a infraestrutura herdada e registrar a FT especializada solicitada, sem publicar remoto.
+1/5 Releitura normativa [concluido]
+  1/1 Ler AGENTS, microconceitos, cenarios e metaarquivos aplicaveis [concluido]
+2/5 Contexto canonico [concluido]
+  1/1 Criar .agents/continue.ia como memoria unica [concluido]
+3/5 Manifesto e infraestrutura [concluido]
+  1/2 Auditar package.json e referencias herdadas [concluido]
+  2/2 Corrigir somente itens comprovadamente invalidos ou incompatíveis [concluido]
+4/5 Compactacao derivada [concluido]
+  1/1 Gerar handoff.md a partir da memoria canonica [concluido]
+5/5 FT especializada [concluido]
+  1/1 Registrar FT para scripts especializados, com requisitos do solicitante [concluido]
+decisoes=Branch dev criada de master limpo; push ignorado por inexistir upstream; nenhum RCF ou README preexistente foi inferido. Manifesto herdado foi substituido por manifesto privado inicial com identificadores SiteMath; RCF e README registram somente requisitos fornecidos.
+requisitos_usuario=Execucao obrigatoria no cliente; declaracao de campo com tipo; limite de loop configuravel (default inicial 500), processamento assincrono/worker quando proporcional; gatilhos, eventos, notificacoes e leitura de campos; manifesto com identificadores inequivocos da linguagem e detectores/plugin de build compativeis com CMS.
+verificacoes=Leitura integral concluida; package.json parseavel; Node verificou a sintaxe dos scripts usados; agent:setup=SETUP_OK; agent:rcf=RCF_DEGRADED apenas por bootstrap; agent:doctor reporta somente index.json ausente, esperado sem fonte de produto.
+falhas=agents:update --check detectou release:v0.0.3 remota que altera package.json; aplicacao foi bloqueada porque o checkout ja possui a inicializacao local deliberadamente diferente e nao ha upstream.
+pendencias=O anexo acessivel determina esta preparacao, mas nao contem a especificacao completa de sintaxe/semantica do produto; os requisitos adicionais permanecem registrados sem inventar linguagem alem dos identificadores normatizados.
+proximo=FT-001 e a continuidade tecnica vigente.
+
+FT-001|nome=Scripts especializados e bootstrap SiteMath|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260714.2222.00|atualizacao=20260714.2222.00
+objetivo=Substituir infraestrutura herdada por comandos especializados e construir de forma incremental o runtime cliente SiteMath, seus detectores e adaptadores de build verificaveis.
+1/5 Diagnostico e contratos [em andamento]
+  1/3 Mapear scripts herdados, entradas, efeitos, lacunas e dependencias [em andamento]
+  2/3 Confirmar RCF, API operacional, estrutura fonte e artefato publicado [pendente]
+  3/3 Definir criterios de aceite, riscos e ordem de migracao [pendente]
+2/5 Infraestrutura operacional [pendente]
+  1/4 Especializar comandos agent, filtro, leitura incremental e limites de saida [pendente]
+  2/4 Implementar comandos de build, teste, lint, contexto e documentacao aplicaveis [pendente]
+  3/4 Remover ou isolar scripts comprovadamente alheios, sem apagar extensoes uteis [pendente]
+  4/4 Validar multiplataforma, CI e idempotencia [pendente]
+3/5 Runtime e linguagem cliente [pendente]
+  1/5 Definir parser e declaracao tipada de campos [pendente]
+  2/5 Implementar limite de iteracao configuravel, async, cancelamento e Worker proporcional [pendente]
+  3/5 Expor eventos, gatilhos, notificacoes e leitura de campos [pendente]
+  4/5 Garantir HTML acessivel, falha segura e execucao obrigatoria no cliente [pendente]
+  5/5 Testar multiplos blocos no mesmo artigo e limites aninhados [pendente]
+4/5 Deteccao e integracao de build [pendente]
+  1/4 Consolidar manifesto com identificadores exatos e schema versionado [pendente]
+  2/4 Implementar deteccao Markdown e HTML sem falso positivo [pendente]
+  3/4 Criar contrato de adaptador plugavel por runtime do CMS [pendente]
+  4/4 Verificar inclusao condicional da biblioteca apenas em paginas validas [pendente]
+5/5 Validacao e entrega [pendente]
+  1/4 Executar testes, lint, build e verificacao do artefato publicado [pendente]
+  2/4 Atualizar RCF, README, memoria e handoff [pendente]
+  3/4 Revisar diffs e compatibilidade [pendente]
+  4/4 Commitar em dev sem push e preparar convergencia futura [pendente]
+decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; nenhuma sintaxe alem dos marcadores de deteccao sera inventada sem especificacao confirmada.
+riscos=Scripts herdados representam o projeto de governanca, nao o produto; atualizador remoto solicita alteracao de package.json e exige reconciliacao antes de aplicacao; sem prompt funcional completo, a linguagem nao pode ter semantica inventada.
+arquivos_afetados_previstos=package.json; RCF.md; README.md; .agents/continue.ia; handoff.md; scripts/.agents/; src/; tests/; dist/; adaptadores declarados.
+verificacoes_previstas=JSON e sintaxe Node; testes unitarios e integracao cliente; detector Markdown/HTML; limite de ciclos; acessibilidade; build e artefato publicado sem vazamento de src.
+pendencias=Confirmar a especificacao funcional completa da linguagem caso ela nao esteja em anexo acessivel; reconciliar atualizacao de governanca antes de executar agentes:update.
+proximo=Inventariar scripts herdados, classificando cada um como reutilizavel, adaptavel, isolavel ou removivel com evidencia.
