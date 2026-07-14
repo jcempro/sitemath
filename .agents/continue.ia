@@ -32,7 +32,7 @@ objetivo=Substituir infraestrutura herdada por comandos especializados e constru
   2/3 Confirmar RCF, API operacional, estrutura fonte e artefato publicado [pendente]
   3/3 Definir criterios de aceite, riscos e ordem de migracao [pendente]
 2/5 Infraestrutura operacional [pendente]
-  1/4 Especializar comandos agent, filtro, leitura incremental e limites de saida [pendente]
+  1/4 Especializar por hooks/adaptadores locais, sem editar a governanca espelhada [pendente]
   2/4 Implementar comandos de build, teste, lint, contexto e documentacao aplicaveis [pendente]
   3/4 Remover ou isolar scripts comprovadamente alheios, sem apagar extensoes uteis [pendente]
   4/4 Validar multiplataforma, CI e idempotencia [pendente]
@@ -52,9 +52,9 @@ objetivo=Substituir infraestrutura herdada por comandos especializados e constru
   2/4 Atualizar RCF, README, memoria e handoff [pendente]
   3/4 Revisar diffs e compatibilidade [pendente]
   4/4 Commitar em dev sem push e preparar convergencia futura [pendente]
-decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; nenhuma sintaxe alem dos marcadores de deteccao sera inventada sem especificacao confirmada.
+decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; nenhuma sintaxe alem dos marcadores de deteccao sera inventada sem especificacao confirmada. AGENTS, associados gerenciados e scripts/.agents sao espelhos imutaveis atualizados somente por agent:agents.
 riscos=Scripts herdados representam o projeto de governanca, nao o produto; atualizador remoto solicita alteracao de package.json e exige reconciliacao antes de aplicacao; sem prompt funcional completo, a linguagem nao pode ter semantica inventada.
-arquivos_afetados_previstos=package.json; RCF.md; README.md; .agents/continue.ia; handoff.md; scripts/.agents/; src/; tests/; dist/; adaptadores declarados.
+arquivos_afetados_previstos=package.json; RCF.md; README.md; agents.local.md; .agents/local/; .agents/hooks/; scripts/ fora de scripts/.agents/; src/; tests/; dist/; adaptadores declarados.
 verificacoes_previstas=JSON e sintaxe Node; testes unitarios e integracao cliente; detector Markdown/HTML; limite de ciclos; acessibilidade; build e artefato publicado sem vazamento de src.
 pendencias=Confirmar a especificacao funcional completa da linguagem caso ela nao esteja em anexo acessivel; reconciliar atualizacao de governanca antes de executar agentes:update.
 proximo=Inventariar scripts herdados, classificando cada um como reutilizavel, adaptavel, isolavel ou removivel com evidencia.

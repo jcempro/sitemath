@@ -25,7 +25,7 @@ Objetivo: Substituir infraestrutura herdada por comandos especializados e constr
 </tr>
 <tr>
 <td rowspan="4">Infraestrutura operacional</td>
-<td>Especializar comandos agent, filtro, leitura incremental e limites de saida</td>
+<td>Especializar por hooks/adaptadores locais, sem editar a governanca espelhada</td>
 <td><span style="color:#64748b">&#9679;</span> pendente</td>
 </tr>
 <tr>
