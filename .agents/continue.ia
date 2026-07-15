@@ -129,9 +129,9 @@ objetivo=Publicar o bootstrap inicial sem persistir token, configurar Trusted Pu
   2/3 Registrar a excecao de bootstrap e a configuracao OIDC no RCF e README [concluido]
   3/3 Remover NPM_TOKEN do workflow e declarar id-token: write [concluido]
 2/4 Validacao e versao [em andamento]
-  1/3 Validar suite, tarball e YAML apos migracao [pendente]
-  2/3 Commitar e enviar a configuracao OIDC em dev [pendente]
-  3/3 Publicar localmente @jcem/sitemath@0.0.1 [pendente]
+  1/3 Validar suite, tarball e YAML apos migracao [concluido]
+  2/3 Commitar e enviar a configuracao OIDC em dev [concluido]
+  3/3 Publicar localmente @jcem/sitemath@0.0.1 [interrompido]
 3/4 Relacao confiavel [pendente]
   1/2 Configurar npm trust github para jcempro/sitemath e release.yml [pendente]
   2/2 Consultar o registro e a relacao configurada [pendente]
@@ -139,6 +139,7 @@ objetivo=Publicar o bootstrap inicial sem persistir token, configurar Trusted Pu
   1/2 Regenerar handoff e registrar evidencias [pendente]
   2/2 Commitar, enviar e convergir dev para main [pendente]
 decisoes=O usuario confirmou npm login como jeancarloem; @jcem/sitemath ainda nao existe no registro. O bootstrap local e necessario porque npm trust exige pacote previamente publicado. O workflow normal usa OIDC, sem NPM_TOKEN persistido.
-verificacoes= npm whoami=jeancarloem; npm view @jcem/sitemath retornou E404 esperado; documentacao oficial npm trust exige npm >=11.15, 2FA, permissao de escrita e pacote existente; sintaxe prevista: npm trust github @jcem/sitemath --file release.yml --repo jcempro/sitemath --allow-publish --yes.
-pendencias=Validar e publicar bootstrap; a configuracao trust pode solicitar 2FA interativa.
-proximo=Executar validacao integral, commit/push do workflow e bootstrap local.
+verificacoes=npm whoami=jeancarloem; npm view @jcem/sitemath retornou E404 esperado; npm run check, validate:package e YAML aprovaram; commit/push OIDC=4e995a8; npm publish inspecionou o tarball com 5 arquivos e confirmou acesso publico como destino; documentacao oficial npm trust exige npm >=11.15, 2FA, permissao de escrita e pacote existente; sintaxe prevista: npm trust github @jcem/sitemath --file release.yml --repo jcempro/sitemath --allow-publish --yes.
+falhas=PUBLICACAO_BLOQUEADA_2FA: npm publish retornou E403 porque a conta exige OTP ou token granular com bypass 2FA. Nenhum pacote foi criado e nenhum segredo foi persistido.
+pendencias=Fornecer OTP atual de 2FA para npm publish --otp; depois configurar e consultar npm trust github.
+proximo=Retomar publicacao com OTP, sem repetir validacoes aprovadas sem evidencia nova.

@@ -188,11 +188,11 @@ Objetivo: Publicar o bootstrap inicial sem persistir token, configurar Trusted P
 <tr>
 <td rowspan="3">Validacao e versao</td>
 <td>Validar suite, tarball e YAML apos migracao</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Commitar e enviar a configuracao OIDC em dev</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Publicar localmente @jcem/sitemath@0.0.1</td>
