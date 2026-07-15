@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0420.00
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0435.00
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -122,7 +122,7 @@ falhas=Validacao NPM inicial tentou cache global Windows sem permissao; validate
 pendencias=Configurar o segredo NPM_TOKEN e habilitar GitHub Pages no repositorio antes da primeira execucao remota. Nao publicar release sem orientacao humana explicita.
 proximo=Nenhuma implementacao pendente; proxima release depende de orientacao humana e de segredo configurado.
 
-FT-004|nome=Bootstrap NPM e Trusted Publishing|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260715.0345.00|atualizacao=20260715.0420.00
+FT-004|nome=Bootstrap NPM e Trusted Publishing|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260715.0345.00|atualizacao=20260715.0435.00
 objetivo=Publicar o bootstrap inicial sem persistir token ou OTP, configurar Trusted Publishing OIDC para o workflow de release e verificar o contrato remoto.
 1/4 Contrato e precondicoes [concluido]
   1/3 Confirmar identidade npm e inexistencia do pacote no registro [concluido]
@@ -138,8 +138,8 @@ objetivo=Publicar o bootstrap inicial sem persistir token ou OTP, configurar Tru
 4/4 Encerramento [pendente]
   1/2 Regenerar handoff e registrar evidencias [pendente]
   2/2 Commitar, enviar e convergir dev para main [pendente]
-decisoes=O usuario confirmou npm login como jeancarloem; @jcem/sitemath ainda nao existe no registro. O bootstrap local e necessario porque npm trust exige pacote previamente publicado. O comando normativo de bootstrap e npm publish --access public, que pode concluir autenticacao no navegador por chave publica; nenhum OTP e persistido. O workflow normal usa OIDC, sem NPM_TOKEN persistido, e conserva o vinculo GitHub/NPM apos o bootstrap. O manifesto declara repository em formato NPM canonico e fixa publishConfig do registro publico e acesso public.
-verificacoes=npm whoami=jeancarloem; npm profile get confirmou 2FA auth-and-writes; npm view @jcem/sitemath retornou E404 antes e depois da tentativa interativa do mantenedor; npm run check, validate:package e YAML aprovaram; commit/push OIDC=4e995a8; npm publish inspecionou o tarball com 5 arquivos e confirmou acesso publico como destino; validate:package aprovou novamente apos publishConfig; documentacao oficial npm trust exige npm >=11.15, 2FA, permissao de escrita e pacote existente; sintaxe prevista: npm trust github @jcem/sitemath --file release.yml --repo jcempro/sitemath --allow-publish --yes.
-falhas=PUBLICACAO_NAO_CONFIRMADA: a tentativa anterior retornou E403 de exigencia 2FA porque a execucao sem TTY nao podia atender ao desafio WebAuthn; a tentativa interativa relatada pelo usuario terminou com erro nao fornecido e a consulta atual do registro retorna E404. Nenhum pacote foi confirmado e nenhum segredo foi persistido.
-pendencias=Commitar e enviar a correcao de metadados; publicar em TTY com npm publish --access public e confirmar a versao no registro; depois configurar e consultar npm trust github.
-proximo=Publicar em terminal interativo e confirmar o registro antes de configurar OIDC.
+decisoes=O usuario confirmou npm login como jeancarloem; @jcem/sitemath ainda nao existe no registro. O bootstrap local e necessario porque npm trust exige pacote previamente publicado. O comando normativo de bootstrap e npm publish --access public, que pode concluir autenticacao no navegador por chave publica; nenhum OTP e persistido. O workflow normal usa OIDC, sem NPM_TOKEN persistido, e conserva o vinculo GitHub/NPM apos o bootstrap. O manifesto declara repository em formato NPM canonico e fixa publishConfig do registro publico e acesso public. O escopo @jcem e valido: npm org ls jcem confirmou jeancarloem como owner. A tentativa com npm 11.18.0 e transitoria, sem instalar dependencia nem alterar o cliente global.
+verificacoes=npm whoami=jeancarloem; npm profile get confirmou 2FA auth-and-writes; npm org ls jcem retornou owner; npm view @jcem/sitemath retornou E404 antes e depois das tentativas; npm run check, validate:package e YAML aprovaram; commit/push OIDC=4e995a8; npm publish inspecionou o tarball com 5 arquivos e confirmou acesso publico como destino; validate:package aprovou novamente apos publishConfig; npm 12.0.1 exige Node ^22.22.2 e a maquina possui 22.21.0; npm 11.18.0 executa neste Node e mantem uma sessao interativa de publicacao aguardando WebAuthn; documentacao oficial npm trust exige npm >=11.15, 2FA, permissao de escrita e pacote existente; sintaxe prevista: npm trust github @jcem/sitemath --file release.yml --repo jcempro/sitemath --allow-publish --yes.
+falhas=PUBLICACAO_NAO_CONFIRMADA: a tentativa anterior retornou E403 de exigencia 2FA porque a execucao sem TTY nao podia atender ao desafio WebAuthn. A publicacao com npm 10.9.4 completou WebAuthn e recebeu E404 no PUT, embora o escopo esteja sob propriedade da conta; o npm 12.0.1 nao e compativel com Node 22.21.0. A sessao atual npm 11.18.0 permanece aguardando a confirmacao local da chave de seguranca. Nenhum pacote foi confirmado e nenhum segredo foi persistido.
+pendencias=Confirmar o prompt local de Windows Hello/chave fisica no Chrome; confirmar a versao no registro; configurar e consultar npm trust github; regenerar handoff, commitar, enviar e convergir dev para main.
+proximo=Retomar pela sessao de WebAuthn aberta; apos a confirmacao, consultar @jcem/sitemath e concluir Trusted Publishing.

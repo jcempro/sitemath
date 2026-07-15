@@ -196,7 +196,7 @@ Objetivo: Publicar o bootstrap inicial sem persistir token ou OTP, configurar Tr
 </tr>
 <tr>
 <td>Publicar localmente @jcem/sitemath@0.0.1</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
 </tr>
 <tr>
 <td rowspan="2">Relacao confiavel</td>
