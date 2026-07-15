@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.2208.12
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.2330.00
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -91,3 +91,32 @@ verificacoes=npm run check aprovou lint, 4 testes unitarios, build, HTML estatic
 falhas=No sandbox local, Bundler nao acessa as gemas instaladas sob perfil do usuario; a mesma matriz passou sob permissao elevada. Automacao visual isolada nao oferece construtor Event para disparar change; o teste DOM unitario cobre a atualizacao assincrona.
 pendencias=Nenhuma.
 proximo=Regenerar handoff, commitar FT-002 em dev e convergir para main sem push.
+
+FT-003|nome=TypeScript, documentacao e entrega|escopo=Tecnico|prioridade=alta|status=em_andamento|inicio=20260714.2330.00|atualizacao=20260714.2330.00
+objetivo=Migrar a implementacao SiteMath para TypeScript puro, alinhar a compilacao a Baseline Widely Available com downstream e entregar documentacao GitHub Pages e pipeline atomico NPM para GitHub Release.
+1/5 Blueprint e precondicao Git [em_andamento]
+  1/3 Registrar arquitetura, baseline e testes funcionais no RCF [concluido]
+  2/3 Registrar FT canonica e plano integral [concluido]
+  3/3 Commitar e enviar exclusivamente o blueprint antes de codigo de produto [em_andamento]
+2/5 Implementacao TypeScript [pendente]
+  1/4 Converter runtime e adaptador para TypeScript estrito com TSDoc [pendente]
+  2/4 Converter scripts locais e testes de produto para TypeScript [pendente]
+  3/4 Configurar bundle UMD, declaracoes e baseline Browserslist [pendente]
+  4/4 Remover fontes JavaScript substituidas sem afetar fixtures de target [pendente]
+3/5 Documentacao publica [pendente]
+  1/3 Criar site estatico acessivel derivado do README [pendente]
+  2/3 Adicionar links de repositorio, autor e NPM [pendente]
+  3/3 Criar workflow GitHub Pages independente de release [pendente]
+4/5 Release atomico [pendente]
+  1/3 Criar workflow acionado somente por release [pendente]
+  2/3 Publicar NPM antes de criar GitHub Release [pendente]
+  3/3 Validar higiene do tarball e segregacao de artefatos [pendente]
+5/5 Validacao e conclusao [pendente]
+  1/4 Executar typecheck, unidade, matriz e validacao de workflows [pendente]
+  2/4 Validar a documentacao em navegador [pendente]
+  3/4 Regenerar handoff, commitar e convergir dev para main [pendente]
+  4/4 Enviar a convergencia para origin [pendente]
+decisoes=O requisito explicito prevalece: implementacao de produto em TypeScript puro. A baseline usa a consulta Browserslist exata baseline widely available with downstream, com janela de 30 meses; ES2022 e piso sintatico sem polyfills. Site Pages e release de pacote sao workflows independentes.
+verificacoes_previstas=typecheck estrito; testes unitarios; matriz HTML, Vite JS/TS, React, Preact e Jekyll; bundle UMD no navegador e CommonJS no Node; validacao YAML; npm pack --dry-run; renderizacao da documentacao sem JavaScript.
+pendencias=Commit e push exclusivos do blueprint devem ocorrer antes de qualquer alteracao em src, scripts de produto ou testes de produto.
+proximo=Gerar handoff, conferir diff do blueprint, commitar em dev e enviar para origin/dev.
