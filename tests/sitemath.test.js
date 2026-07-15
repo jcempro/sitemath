@@ -31,3 +31,25 @@ test("detecta somente marcadores exatos e sintaxe valida", () => {
   assert.equal(SiteMath.detectHtml(html).valid, 1);
   assert.equal(SiteMath.detectMarkdown('```typescript\nconst x = 1;\n```').found, 0);
 });
+
+test("runtime cliente atualiza campo readonly de forma assincrona", async () => {
+  class Element {
+    constructor(tagName) { this.tagName = tagName; this.children = []; this.listeners = {}; this.attributes = {}; }
+    append(child) { this.children.push(child); return child; }
+    insertAdjacentElement(_position, child) { document.forms.push(child); return child; }
+    addEventListener(name, listener) { (this.listeners[name] ||= []).push(listener); }
+    dispatchEvent() { return true; }
+    setAttribute(name, value) { this.attributes[name] = value; }
+  }
+  const script = new Element("script");
+  script.textContent = `field idade: number = { label: "Idade" }; field aceite: checkbox = { label: "Aceite" }; field total: number = { label: "Total", readonly: true }; on.change([idade, aceite], () => { if (aceite) { total = idade * 2; } });`;
+  const document = { forms: [], createElement: (tagName) => new Element(tagName), querySelectorAll: () => [script] };
+  const [instance] = SiteMath.mount(document);
+  const controls = document.forms[0].children.map((wrapper) => wrapper.children.at(-1));
+  const idade = controls[0]; const aceite = controls[1];
+  idade.value = "21"; aceite.checked = true;
+  for (const listener of idade.listeners.change) listener({});
+  for (const listener of aceite.listeners.change) listener({});
+  await Promise.resolve(); await Promise.resolve();
+  assert.equal(instance.fields.total, 42);
+});

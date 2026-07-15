@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath v0.1</title>
+<script src="../dist/sitemath.js"></script>
+<script type="text/x-sitemath">
+field idade: number = { label: "Idade", tip: "Informe a idade", min: 0 };
+field aceite: checkbox = { label: "Aceito os termos", required: true };
+field total: number = { label: "Dobro da idade", readonly: true };
+on.init(() => { total = 0; });
+on.change([idade, aceite], () => { if (aceite) { total = idade * 2; notify.info("Total atualizado"); } });
+on.submit((event) => { if (!aceite) { notify.error("Aceite os termos"); event.preventDefault(); return; } notify.success("Formulario valido"); });
+</script>
+<script>SiteMath.mount(document);</script>

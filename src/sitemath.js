@@ -199,7 +199,7 @@
       syncControls(ast.fields, fields, controls);
     }).catch((error) => { const payload = diagnostic(error); emit(form, "sitemath:error", payload); const handler = handlers.error; if (handler && name !== "error") run("error", payload); });
     for (const [id, control] of Object.entries(controls)) control.addEventListener("change", () => { fields[id] = readControl(control); run("change", { type: "change", field: id }); });
-    form.addEventListener("submit", (event) => { const wrapped = { preventDefault: () => event.preventDefault() }; run("submit", wrapped); });
+    form.addEventListener("submit", (event) => { if (handlers.submit) event.preventDefault(); const wrapped = { preventDefault: () => event.preventDefault() }; run("submit", wrapped); });
     run("init", { type: "init" });
     return { ast, fields, form, run };
   }
