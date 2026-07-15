@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SiteMath: linguagem declarativa segura para formulários, cálculos e interatividade em conteúdo gerenciado.">
+  <title>SiteMath — documentação</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Ir ao conteúdo</a>
+  <header class="hero">
+    <nav aria-label="Navegação principal">
+      <a class="brand" href="#inicio">Site<span>Math</span></a>
+      <div class="links"><a href="#primeiros-passos">Começar</a><a href="#linguagem">Linguagem</a><a href="#integracao">Integração</a></div>
+    </nav>
+    <section id="inicio" class="hero-copy">
+      <p class="eyebrow">jcem.pro/sitemath</p>
+      <h1>Interatividade declarativa para conteúdo que precisa continuar legível.</h1>
+      <p>SiteMath cria campos, cálculos e reações no navegador sem executar JavaScript arbitrário. O conteúdo permanece semântico e a detecção no build só carrega o runtime quando há um bloco válido.</p>
+      <p class="actions"><a class="button" href="#primeiros-passos">Ver o uso básico</a><a class="text-button" href="https://github.com/jcempro/sitemath">Ver repositório <span aria-hidden="true">↗</span></a></p>
+    </section>
+  </header>
+  <main id="conteudo">
+    <section id="primeiros-passos" class="section two-columns">
+      <div><p class="eyebrow">Primeiros passos</p><h2>Um bloco, um formulário acessível.</h2><p>Inclua o arquivo distribuído e use o tipo HTML exato <code>text/x-sitemath</code>. Em Markdown, use uma cerca de código com a linguagem exata <code>sitemath</code>.</p><ol><li>Inclua <code>dist/sitemath.js</code>.</li><li>Declare os campos tipados.</li><li>Monte com <code>SiteMath.mount(document)</code>.</li></ol></div>
+      <pre aria-label="Exemplo SiteMath"><code>&lt;script src="dist/sitemath.js"&gt;&lt;/script&gt;
+&lt;script type="text/x-sitemath"&gt;
+field quantidade: number = {
+  label: "Quantidade", value: 1, min: 1
+};
+field total: number = { label: "Total", readonly: true };
+on.change([quantidade], () =&gt; { total = quantidade * 12; });
+&lt;/script&gt;
+&lt;script&gt;SiteMath.mount(document);&lt;/script&gt;</code></pre>
+    </section>
+    <section id="linguagem" class="section panel">
+      <p class="eyebrow">A linguagem</p><h2>Sintaxe TypeScript-like, execução restrita.</h2>
+      <div class="cards"><article><h3>Campos tipados</h3><p><code>text</code>, <code>textarea</code>, <code>number</code>, <code>checkbox</code>, <code>radio</code>, <code>select</code>, <code>date</code> e <code>hidden</code>. Campos visíveis exigem <code>label</code>.</p></article><article><h3>Interface clara</h3><p><code>placeholder</code> só é válido em texto; <code>tip</code> é associado via acessibilidade e não substitui rótulos ou erros.</p></article><article><h3>Fluxo previsível</h3><p>Eventos <code>on.init</code>, <code>on.change</code>, <code>on.submit</code> e <code>on.error</code>; condições, <code>for</code> C++ e <code>for...of limit()</code>.</p></article></div>
+    </section>
+    <section class="section two-columns reverse"><pre aria-label="Limites de execução"><code>SiteMath.configure({
+  maxIterations: 500,
+  onNotify: ({ level, message }) =&gt; console.info(level, message)
+});</code></pre><div><p class="eyebrow">Segurança por construção</p><h2>Sem <code>eval</code>, sem rede, sem acesso livre ao DOM.</h2><p>Cada ação é enfileirada por instância e possui orçamento próprio de iterações. Exceder o limite interrompe apenas a ação atual e produz diagnóstico estruturado.</p></div></section>
+    <section id="integracao" class="section panel"><p class="eyebrow">Integração de build</p><h2>Inclua o runtime apenas onde ele é necessário.</h2><p>O adaptador Node examina HTML ou Markdown sem executar os blocos. Ele aceita somente os identificadores canônicos e a estrutura sintaticamente válida.</p><pre><code>const adapter = require("@jcem/sitemath").createNodeAdapter();
+const result = adapter.detectMarkdown(markdown);
+if (result.valid &gt; 0) includeRuntime();</code></pre></section>
+    <section class="section commands"><p class="eyebrow">Desenvolvimento</p><h2>Verificações locais.</h2><dl><dt><code>npm run check</code></dt><dd>Typecheck, unidade, build e matriz de targets.</dd><dt><code>npm run test:targets</code></dt><dd>HTML estático, Vite JS/TS, React, Preact e Jekyll.</dd><dt><code>npm run release:publish 1.2.3</code></dt><dd>Prepara e envia o gatilho único de release.</dd></dl></section>
+  </main>
+  <footer><p>SiteMath é licenciado sob MPL-2.0.</p><nav aria-label="Links institucionais"><a href="https://github.com/jcempro/sitemath">GitHub</a><a href="https://jeancarloem.com">Autor</a><a href="https://www.npmjs.com/package/@jcem/sitemath">Pacote NPM</a></nav></footer>
+</body>
+</html>
