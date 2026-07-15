@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const { normalizeReleaseVersion } = require("./release-workflow");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const PACKAGE_PATH = path.join(ROOT_DIR, "package.json");
 
 class UsageError extends Error {}
@@ -128,8 +128,8 @@ function prepareVersionCommit(version, options) {
 }
 
 function prepareArtifactCommit(version, options) {
-  run(process.execPath, [path.join(ROOT_DIR, "scripts", ".agents", "repo-tools.js"), "agent:release", version], { timeout: 900000 });
-  run(process.execPath, [path.join(ROOT_DIR, "scripts", ".agents", "repo-tools.js"), "agent:verify"], { timeout: 900000 });
+  run(process.execPath, [path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "repo-tools.js"), "agent:release", version], { timeout: 900000 });
+  run(process.execPath, [path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "repo-tools.js"), "agent:verify"], { timeout: 900000 });
   run("git", ["add", "--", "dist", "index.json"]);
   assertStagedPaths(["dist/", "index.json"], { prefixes: true });
   run("git", ["commit", "-m", `chore: gera artefato v${version}`]);
@@ -137,7 +137,7 @@ function prepareArtifactCommit(version, options) {
 }
 
 function createAndPushTrigger(version, options) {
-  run(process.execPath, [path.join(ROOT_DIR, "scripts", ".agents", "repo-tools.js"), "agent:release:trigger", version]);
+  run(process.execPath, [path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "repo-tools.js"), "agent:release:trigger", version]);
   run("git", ["add", "--", "release"]);
   assertStagedPaths(["release"], { statuses: ["A"] });
   run("git", ["commit", "-m", `chore: aciona release v${version}`]);

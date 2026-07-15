@@ -10,11 +10,11 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const { createZipFromDirectory } = require("../lib/archive");
+const { createZipFromDirectory } = require("./archive");
 const { filterOutput } = require("./to-ia");
-const { runReleaseHook } = require("./release-hooks");
+const { runReleaseHook } = require("../../../scenarios/release/scripts/release-hooks");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const SRC_DIR = path.join(ROOT_DIR, "src");
 const DIST_DIR = path.join(ROOT_DIR, "dist");
 const INDEX_PATH = path.join(ROOT_DIR, "index.json");
@@ -22,13 +22,16 @@ const RELEASE_PATH = path.join(DIST_DIR, "release.json");
 const RELEASE_NOTE_PATH = path.join(DIST_DIR, "release-note.txt");
 const PACKAGE_PATH = path.join(ROOT_DIR, "package.json");
 const DISTRIBUTION_PACKAGE_PATH = path.join(DIST_DIR, "package.json");
+const UPDATE_FORMAT_PATH = path.join(ROOT_DIR, ".agents", "core", "update", "formats", "governance-manifest.v2.json");
 const NORMATIVE_MIRRORS = [
   "AGENTS.md",
-  path.join(".agents", ".autoupdate.md"),
-  path.join(".agents", "microconceitos.md"),
-  path.join(".agents", "publish.md"),
-  path.join(".agents", "release.md"),
-  path.join(".agents", "webPageLike.md"),
+  path.join(".agents", "core", "contracts.md"),
+  path.join(".agents", "core", "update", "scenario.md"),
+  path.join(".agents", "core", "update", "formats", "governance-manifest.v2.json"),
+  path.join(".agents", "core", "concepts", "microconceitos.md"),
+  path.join(".agents", "scenarios", "content-publication", "scenario.md"),
+  path.join(".agents", "scenarios", "release", "scenario.md"),
+  path.join(".agents", "scenarios", "web", "page-like", "scenario.md"),
 ];
 const ALIEN_SCRIPT_TERMS = [
   "What" + "Send",
@@ -94,7 +97,7 @@ const COMMANDS = {
   },
   "agent:handoff": {
     description: "gera handoff.md de .agents/continue.ia",
-    run: () => runNodeScript(path.join("scripts", ".agents", "generate-agents-status.js")),
+    run: () => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "generate-agents-status.js")),
     status: "available",
   },
   "agent:compress": {
@@ -104,7 +107,7 @@ const COMMANDS = {
   },
   "agent:agents": {
     description: "atualiza governanca operacional gerenciada",
-    run: (_args) => runNodeScript(path.join("scripts", ".agents", "update-agents.js"), _args),
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "update-agents.js"), _args),
     status: "available",
   },
 };
@@ -308,11 +311,19 @@ function buildIndex() {
     }))
     .sort((a, b) => a.path.localeCompare(b.path, "en"));
 
-  return {
+  const index = {
     files,
     root: "src",
     schema: 1,
   };
+  index.update = createGovernanceManifest(buildDistributionFiles(index), (entry) => fs.readFileSync(path.join(ROOT_DIR, entry.sourcePath)));
+  index.update.files.push({
+    kind: "package",
+    path: "package.json",
+    sha256: hashTextFile(PACKAGE_PATH),
+    source: "package.json",
+  });
+  return index;
 }
 
 function buildDist(options = {}) {
@@ -355,6 +366,7 @@ function buildDist(options = {}) {
       version: releaseVersion,
     };
   }
+  releaseIndex.update = createGovernanceManifest(releaseIndex.files, (entry) => fs.readFileSync(path.join(DIST_DIR, entry.path)));
   writeJsonMinified(RELEASE_PATH, releaseIndex);
 
   const archivePath = path.join(DIST_DIR, archiveName);
@@ -377,14 +389,29 @@ function buildDistributionFiles(index) {
     path: releaseRelativePath(file.path),
     sourcePath: file.path,
   }));
-  const scripts = listFiles(path.join(ROOT_DIR, "scripts"))
-    .filter((filePath) => path.extname(filePath).toLocaleLowerCase("en-US") === ".js")
+  const scripts = listFiles(path.join(ROOT_DIR, ".agents"))
+    .filter((filePath) => path.extname(filePath).toLocaleLowerCase("en-US") === ".js" && isManagedScriptPath(filePath))
     .map((filePath) => ({
       name: path.basename(filePath),
       path: toPosix(path.relative(ROOT_DIR, filePath)),
       sourcePath: toPosix(path.relative(ROOT_DIR, filePath)),
     }));
   return [...normative, ...scripts].sort((a, b) => a.path.localeCompare(b.path, "en"));
+}
+
+function createGovernanceManifest(entries, contentForEntry) {
+  const format = JSON.parse(fs.readFileSync(UPDATE_FORMAT_PATH, "utf8"));
+  return {
+    format: format.format,
+    marker: format.marker,
+    schema: format.version,
+    files: entries.map((entry) => ({
+      ...(entry.kind ? { kind: entry.kind } : {}),
+      path: entry.path,
+      ...(entry.sourcePath ? { source: entry.sourcePath } : {}),
+      sha256: hashTextBuffer(contentForEntry(entry)),
+    })),
+  };
 }
 
 function buildDistributionPackage() {
@@ -442,7 +469,7 @@ function readExistingReleaseMetadata() {
 function verify() {
   assertNormativeMirrors();
   const checks = [];
-  for (const script of listFiles(path.join(ROOT_DIR, "scripts")).filter((filePath) => path.extname(filePath) === ".js")) {
+  for (const script of listFiles(path.join(ROOT_DIR, ".agents")).filter((filePath) => path.extname(filePath) === ".js" && isManagedScriptPath(filePath))) {
     const content = fs.readFileSync(script, "utf8");
     if (ALIEN_SCRIPT_TERMS.some((term) => content.toLocaleLowerCase("en-US").includes(term.toLocaleLowerCase("en-US")))) {
       throw new Error(`Referencia alienigena detectada em ${toPosix(path.relative(ROOT_DIR, script))}.`);
@@ -468,16 +495,18 @@ function validateIndex(index) {
       throw new Error(`Entrada invalida no indexador: ${JSON.stringify(file)}`);
     }
   }
+  validateGovernanceManifest(index.update, "index.json");
 }
 
 function validateDist() {
   assertFile(path.join(DIST_DIR, "AGENTS.md"), "dist/AGENTS.md ausente.");
-  assertFile(path.join(DIST_DIR, ".agents", ".autoupdate.md"), "dist/.agents/.autoupdate.md ausente.");
-  assertFile(path.join(DIST_DIR, ".agents", "microconceitos.md"), "dist/.agents/microconceitos.md ausente.");
-  assertFile(path.join(DIST_DIR, ".agents", "publish.md"), "dist/.agents/publish.md ausente.");
-  assertFile(path.join(DIST_DIR, ".agents", "release.md"), "dist/.agents/release.md ausente.");
-  assertFile(path.join(DIST_DIR, ".agents", "webPageLike.md"), "dist/.agents/webPageLike.md ausente.");
-  assertFile(path.join(DIST_DIR, "scripts", ".agents", "release-hooks.js"), "dist/scripts/.agents/release-hooks.js ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "contracts.md"), "dist/.agents/core/contracts.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "update", "scenario.md"), "dist/.agents/core/update/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "concepts", "microconceitos.md"), "dist/.agents/core/concepts/microconceitos.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "scenarios", "content-publication", "scenario.md"), "dist/.agents/scenarios/content-publication/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "scenarios", "release", "scenario.md"), "dist/.agents/scenarios/release/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "scenarios", "web", "page-like", "scenario.md"), "dist/.agents/scenarios/web/page-like/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "scenarios", "release", "scripts", "release-hooks.js"), "dist/.agents/scenarios/release/scripts/release-hooks.js ausente.");
   assertFile(DISTRIBUTION_PACKAGE_PATH, "dist/package.json ausente.");
   assertFile(RELEASE_PATH, "dist/release.json ausente.");
   const release = JSON.parse(fs.readFileSync(RELEASE_PATH, "utf8"));
@@ -487,6 +516,7 @@ function validateDist() {
   if (!release.files.some((file) => file.path === "package.json")) {
     throw new Error("dist/release.json nao indexa package.json.");
   }
+  validateGovernanceManifest(release.update, "dist/release.json");
   const distributionPackage = JSON.parse(fs.readFileSync(DISTRIBUTION_PACKAGE_PATH, "utf8"));
   assertPublishedMain(distributionPackage);
   const policy = distributionPackage.agentsGovernance;
@@ -495,6 +525,21 @@ function validateDist() {
     !Array.isArray(policy.optionalDependencies) || !distributionPackage.scripts ||
     !distributionPackage.scripts["agent:agents"] || !distributionPackage.scripts["agents:update"]) {
     throw new Error("dist/package.json nao contem contrato executavel de governanca.");
+  }
+}
+
+function validateGovernanceManifest(manifest, label) {
+  const format = JSON.parse(fs.readFileSync(UPDATE_FORMAT_PATH, "utf8"));
+  if (!manifest || manifest.format !== format.format || manifest.schema !== format.version ||
+    manifest.marker !== format.marker || !Array.isArray(manifest.files) || manifest.files.length === 0) {
+    throw new Error(`${label} sem manifesto de atualizacao valido.`);
+  }
+  const paths = new Set();
+  for (const entry of manifest.files) {
+    if (!entry || !entry.path || !entry.sha256 || paths.has(entry.path)) {
+      throw new Error(`${label} possui entrada de atualizacao invalida.`);
+    }
+    paths.add(entry.path);
   }
 }
 
@@ -518,7 +563,7 @@ function cleanGeneratedArtifacts() {
 function repairGeneratedArtifacts() {
   const index = buildIndex();
   writeJsonMinified(INDEX_PATH, index);
-  runNodeScript(path.join("scripts", ".agents", "generate-agents-status.js"));
+  runNodeScript(path.join(".agents", "core", "runtime", "scripts", "generate-agents-status.js"));
   const dist = buildDist();
   return ok("REPAIR_OK", {
     archive: dist.archive,
@@ -925,16 +970,17 @@ function readPackageScripts() {
 function cleanDirectory(dirPath) {
   if (fs.existsSync(dirPath)) {
     try {
-      fs.rmSync(dirPath, { force: true, maxRetries: 5, recursive: true, retryDelay: 100 });
+      fs.rmSync(dirPath, { force: true, maxRetries: 20, recursive: true, retryDelay: 250 });
     } catch (error) {
-      if (error.code !== "ENOTEMPTY" || !fs.existsSync(dirPath)) {
+      if (!new Set(["ENOTEMPTY", "EPERM", "EBUSY"]).has(error.code) || !fs.existsSync(dirPath)) {
         throw error;
       }
 
-      // PROTECAO: Windows pode manter o diretorio vazio apos remover suas entradas.
+      // FIX-BUG: Windows pode manter o ZIP ou o diretorio transitoriamente bloqueado apos a geracao.
       for (const entry of fs.readdirSync(dirPath)) {
-        fs.rmSync(path.join(dirPath, entry), { force: true, maxRetries: 5, recursive: true, retryDelay: 100 });
+        fs.rmSync(path.join(dirPath, entry), { force: true, maxRetries: 20, recursive: true, retryDelay: 250 });
       }
+      fs.rmSync(dirPath, { force: true, maxRetries: 20, recursive: true, retryDelay: 250 });
     }
   }
 }
@@ -960,6 +1006,14 @@ function writeJsonMinified(filePath, value) {
   fs.writeFileSync(filePath, JSON.stringify(value), "utf8");
 }
 
+function hashTextFile(filePath) {
+  return hashTextBuffer(fs.readFileSync(filePath));
+}
+
+function hashTextBuffer(buffer) {
+  return crypto.createHash("sha256").update(Buffer.from(buffer.toString("utf8").replace(/\r\n/gu, "\n"), "utf8")).digest("hex");
+}
+
 function assertDirectory(dirPath, message) {
   if (!fs.existsSync(dirPath) || !fs.statSync(dirPath).isDirectory()) {
     throw new Error(message);
@@ -976,7 +1030,7 @@ function compactOperationalContext() {
   const memoryPath = path.join(ROOT_DIR, ".agents", "continue.ia");
   const handoffPath = path.join(ROOT_DIR, "handoff.md");
   assertFile(memoryPath, ".agents/continue.ia ausente.");
-  const result = runProcess(process.execPath, [path.join(ROOT_DIR, "scripts", ".agents", "generate-agents-status.js")]);
+  const result = runProcess(process.execPath, [path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "generate-agents-status.js")]);
   if (result.status !== 0) {
     throw new Error("Falha ao gerar projecao compacta do estado operacional.");
   }
@@ -1020,6 +1074,11 @@ function limitOutput(value) {
 
 function toPosix(value) {
   return String(value || "").split(path.sep).join("/");
+}
+
+function isManagedScriptPath(filePath) {
+  const relativePath = toPosix(path.relative(ROOT_DIR, filePath));
+  return !relativePath.startsWith(".agents/hooks/") && !relativePath.startsWith(".agents/local/");
 }
 
 if (require.main === module) {

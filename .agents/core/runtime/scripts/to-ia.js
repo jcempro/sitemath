@@ -7,7 +7,7 @@ const childProcess = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const OUTPUT_DIR = path.join(ROOT_DIR, ".agents", "cache", "outputs");
 const MAX_BYTES = 8192;
 const MAX_LINES = 50;

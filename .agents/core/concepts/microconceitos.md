@@ -1,4 +1,4 @@
-# Microconceitos normativos
+# Núcleo — Microconceitos normativos
 
 Extensão direta de `AGENTS.md` §2.5. Identificadores são estáveis; referência a um identificador incorpora integralmente seu conteúdo. Todo arquivo que o cite DEVE ser carregado com este documento antes de aplicar a regra.
 

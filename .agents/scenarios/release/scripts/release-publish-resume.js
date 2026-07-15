@@ -7,7 +7,7 @@ const path = require("path");
 const { inspectPreflight, main: standardMain, parseArgs } = require("./release-publish");
 const { normalizeReleaseVersion } = require("./release-workflow");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const PACKAGE_PATH = path.join(ROOT_DIR, "package.json");
 
 function main(argv = process.argv.slice(2)) {
@@ -39,7 +39,7 @@ function assertPreflight(preflight) {
 }
 
 function prepareArtifactCommit(version, options) {
-  const repoTools = path.join(ROOT_DIR, "scripts", ".agents", "repo-tools.js");
+  const repoTools = path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "repo-tools.js");
   runTransient(process.execPath, [repoTools, "agent:release", version]);
   runTransient(process.execPath, [repoTools, "agent:verify"]);
   run("git", ["add", "--", "dist", "index.json"]);
@@ -49,7 +49,7 @@ function prepareArtifactCommit(version, options) {
 }
 
 function createAndPushTrigger(version, options) {
-  run(process.execPath, [path.join(ROOT_DIR, "scripts", ".agents", "repo-tools.js"), "agent:release:trigger", version]);
+  run(process.execPath, [path.join(ROOT_DIR, ".agents", "core", "runtime", "scripts", "repo-tools.js"), "agent:release:trigger", version]);
   run("git", ["add", "--", "release"]);
   assertStagedPaths(["release"], { statuses: ["A"] });
   run("git", ["commit", "-m", `chore: aciona release v${version}`]);

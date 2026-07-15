@@ -12,9 +12,10 @@ const https = require("https");
 const os = require("os");
 const path = require("path");
 
-const { extractZip } = require("../lib/archive");
+const { extractZip } = require("./archive");
+const { FORMAT, MARKER, VERSION, convertLegacyLock, isCurrentLock } = require("../../update/migrations/v1-to-v2");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const SOURCE_OWNER = "JeanCarloEM";
 const SOURCE_REPO = "agents.md";
 const SOURCE_API = `https://api.github.com/repos/${SOURCE_OWNER}/${SOURCE_REPO}`;
@@ -23,9 +24,10 @@ const MANAGED_EXTENSIONS = new Set([".js", ".json", ".md"]);
 const PACKAGE_RELATIVE_PATH = "package.json";
 const BOOTSTRAP_MANAGED = new Set([
   "AGENTS.md",
-  ".agents/.autoupdate.md",
-  ".agents/microconceitos.md",
-  ".agents/webPageLike.md",
+  ".agents/core/contracts.md",
+  ".agents/core/concepts/microconceitos.md",
+  ".agents/core/update/scenario.md",
+  ".agents/scenarios/web/page-like/scenario.md",
 ]);
 const LEGACY_MANAGED_FILES = new Set([
   "scripts/.agents/generate-agents-status.js",
@@ -241,38 +243,68 @@ function scoreAgentsPath(filePath) {
 }
 
 function collectRemoteGovernanceFiles(remoteRoot) {
+  const source = discoverGovernanceManifest(remoteRoot);
   const files = new Map();
-  const agentsPath = resolveCaseInsensitiveFile(remoteRoot, "agents.md");
-  const distributionRoot = fs.existsSync(path.join(remoteRoot, "scripts")) ? remoteRoot : path.dirname(remoteRoot);
-
-  addRemoteFile(files, remoteRoot, path.basename(agentsPath), "AGENTS.md");
-
-  for (const rel of discoverReferencedMarkdown(fs.readFileSync(agentsPath, "utf8"))) {
-    addRemoteFile(files, remoteRoot, normalizeGovernanceRelativePath(rel));
-  }
-
-  for (const filePath of listFiles(path.join(remoteRoot, ".agents"))) {
-    const relativePath = path.relative(remoteRoot, filePath);
-    if (!isLocalExtensionPath(relativePath) && MANAGED_EXTENSIONS.has(path.extname(filePath).toLocaleLowerCase("en-US"))) {
-      addRemoteFile(files, remoteRoot, relativePath);
+  for (const entry of source.manifest.files) {
+    const target = safeRelativePath(entry.path);
+    if (isLocalExtensionPath(target) || toPosixPath(target).toLocaleLowerCase("en-US") === "agents.local.md") {
+      throw new Error(`Manifesto remoto inclui extensao local: ${toPosixPath(target)}`);
     }
+    const origin = safeRelativePath(entry.source || entry.path);
+    addRemoteFile(files, source.baseRoot, origin, target, entry.kind || (target === PACKAGE_RELATIVE_PATH ? "package" : "file"), entry.sha256);
   }
-
-  for (const folder of [path.join("scripts", ".agents"), path.join("scripts", "lib")]) {
-    for (const filePath of listFiles(path.join(distributionRoot, folder))) {
-      const relativePath = path.relative(distributionRoot, filePath);
-      if (MANAGED_EXTENSIONS.has(path.extname(filePath).toLocaleLowerCase("en-US"))) {
-        addRemoteFile(files, distributionRoot, relativePath);
-      }
-    }
-  }
-
-  const packagePath = path.join(distributionRoot, PACKAGE_RELATIVE_PATH);
-  if (fs.existsSync(packagePath)) {
-    addRemoteFile(files, distributionRoot, PACKAGE_RELATIVE_PATH, PACKAGE_RELATIVE_PATH, "package");
-  }
-
+  assertRequiredManagedFiles(files);
   return [...files.values()];
+}
+
+function discoverGovernanceManifest(remoteRoot) {
+  const candidates = [
+    { baseRoot: remoteRoot, filePath: path.join(remoteRoot, "release.json"), label: "release.json" },
+    { baseRoot: path.dirname(remoteRoot), filePath: path.join(path.dirname(remoteRoot), "index.json"), label: "index.json" },
+  ];
+  for (const candidate of candidates) {
+    if (!fs.existsSync(candidate.filePath)) continue;
+    const raw = JSON.parse(fs.readFileSync(candidate.filePath, "utf8"));
+    return { ...candidate, manifest: parseGovernanceManifest(raw, candidate.label) };
+  }
+  throw new Error("Manifesto remoto de atualizacao ausente.");
+}
+
+function parseGovernanceManifest(raw, label) {
+  const declared = raw && raw.update;
+  if (declared && declared.format === FORMAT && declared.schema === VERSION && declared.marker === MARKER) {
+    return validateGovernanceManifest(declared, label);
+  }
+  if (raw && raw.schema === 1 && Array.isArray(raw.files)) {
+    return validateGovernanceManifest({
+      format: FORMAT,
+      marker: "governance-manifest/v1-transitional",
+      schema: 1,
+      files: raw.files.map((entry) => ({ path: entry.path, source: entry.source || entry.path, kind: entry.path === PACKAGE_RELATIVE_PATH ? "package" : "file" })),
+    }, label, true);
+  }
+  throw new Error(`${label} sem manifesto de atualizacao reconhecido.`);
+}
+
+function validateGovernanceManifest(manifest, label, legacy = false) {
+  if (!manifest || !Array.isArray(manifest.files) || manifest.files.length === 0 || (!legacy && manifest.marker !== MARKER)) {
+    throw new Error(`${label} contem manifesto invalido.`);
+  }
+  const paths = new Set();
+  for (const entry of manifest.files) {
+    const target = toPosixPath(safeRelativePath(entry && entry.path));
+    if (paths.has(target)) throw new Error(`${label} possui destino duplicado: ${target}`);
+    paths.add(target);
+    safeRelativePath(entry.source || entry.path);
+    if (entry.sha256 && !/^[a-f0-9]{64}$/iu.test(entry.sha256)) throw new Error(`${label} possui hash invalido: ${target}`);
+  }
+  return manifest;
+}
+
+function assertRequiredManagedFiles(files) {
+  for (const required of BOOTSTRAP_MANAGED) {
+    if (!files.has(required)) throw new Error(`Manifesto remoto incompleto: ${required}`);
+  }
 }
 
 function discoverReferencedMarkdown(content) {
@@ -297,7 +329,7 @@ function normalizeGovernanceRelativePath(value) {
   return normalized;
 }
 
-function addRemoteFile(files, remoteRoot, relativePath, targetRelativePath = relativePath, kind = "file") {
+function addRemoteFile(files, remoteRoot, relativePath, targetRelativePath = relativePath, kind = "file", expectedHash = "") {
   const safeRel = safeRelativePath(relativePath);
   const sourcePath = path.join(remoteRoot, safeRel);
 
@@ -309,8 +341,12 @@ function addRemoteFile(files, remoteRoot, relativePath, targetRelativePath = rel
     throw new Error(`Tipo normativo não permitido: ${toPosixPath(safeRel)}`);
   }
 
+  const content = fs.readFileSync(sourcePath);
+  if (expectedHash && hashTextContent(content) !== expectedHash.toLocaleLowerCase("en-US")) {
+    throw new Error(`Hash remoto divergente: ${toPosixPath(safeRel)}`);
+  }
   files.set(toPosixPath(targetRelativePath), {
-    content: fs.readFileSync(sourcePath),
+    content,
     kind,
     relativePath: safeRelativePath(targetRelativePath),
   });
@@ -333,9 +369,9 @@ function compareRemoteFiles(rootDir, remoteFiles, previousLock = null) {
     });
   }
 
-  for (const localRel of listPreviouslyManagedFiles(previousLock)) {
+  for (const localRel of listManagedCleanupPaths(previousLock)) {
     if (toPosixPath(localRel) !== toPosixPath(LOCK_FILE) && toPosixPath(localRel) !== PACKAGE_RELATIVE_PATH &&
-      !remotePaths.has(toPosixPath(localRel))) {
+      !remotePaths.has(toPosixPath(localRel)) && fs.existsSync(path.join(rootDir, localRel))) {
       changes.push({
         action: "remove",
         relativePath: localRel,
@@ -352,6 +388,14 @@ function listPreviouslyManagedFiles(lock) {
   }
 
   return lock.managedFiles.map((entry) => safeRelativePath(entry.path || entry.relativePath || entry));
+}
+
+function listManagedCleanupPaths(lock) {
+  return [...new Set([
+    ...BOOTSTRAP_MANAGED,
+    ...LEGACY_MANAGED_FILES,
+    ...listPreviouslyManagedFiles(lock),
+  ])].filter((relativePath) => !isLocalExtensionPath(relativePath) && toPosixPath(relativePath).toLocaleLowerCase("en-US") !== "agents.local.md");
 }
 
 function assertManagedFilesClean(rootDir, force, plan) {
@@ -486,24 +530,58 @@ function isRecognizedLegacyGovernanceFile(relativePath) {
 }
 
 function applyPlan(rootDir, plan) {
-  for (const change of plan.changes) {
-    const target = path.join(rootDir, change.relativePath);
-
-    if (change.action === "unchanged") {
-      continue;
+  const backupRoot = fs.mkdtempSync(path.join(os.tmpdir(), "agents-update-backup-"));
+  const touched = [];
+  const lockTarget = path.join(rootDir, LOCK_FILE);
+  try {
+    for (const change of plan.changes) {
+      if (change.action === "unchanged") continue;
+      applyTransactionalChange(rootDir, backupRoot, change, touched);
     }
-
-    if (change.action === "remove") {
-      fs.rmSync(target, { force: true });
-      continue;
-    }
-
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.writeFileSync(target, change.content);
+    applyTransactionalChange(rootDir, backupRoot, {
+      action: "update",
+      content: Buffer.from(`${JSON.stringify(plan.lock)}\n`, "utf8"),
+      relativePath: LOCK_FILE,
+    }, touched);
+  } catch (error) {
+    restoreTransactionalChanges(rootDir, backupRoot, touched);
+    throw error;
+  } finally {
+    fs.rmSync(backupRoot, { force: true, recursive: true });
   }
 
-  fs.mkdirSync(path.dirname(path.join(rootDir, LOCK_FILE)), { recursive: true });
-  fs.writeFileSync(path.join(rootDir, LOCK_FILE), `${JSON.stringify(plan.lock)}\n`, "utf8");
+  if (!fs.existsSync(lockTarget)) {
+    throw new Error("Lock de atualizacao ausente apos transacao.");
+  }
+}
+
+function applyTransactionalChange(rootDir, backupRoot, change, touched) {
+  const target = path.join(rootDir, change.relativePath);
+  const backup = path.join(backupRoot, change.relativePath);
+  const existed = fs.existsSync(target);
+  if (existed) {
+    fs.mkdirSync(path.dirname(backup), { recursive: true });
+    fs.copyFileSync(target, backup);
+  }
+  touched.push({ backup, existed, relativePath: change.relativePath });
+  if (change.action === "remove") {
+    fs.rmSync(target, { force: true });
+    return;
+  }
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, change.content);
+}
+
+function restoreTransactionalChanges(rootDir, backupRoot, touched) {
+  for (const entry of [...touched].reverse()) {
+    const target = path.join(rootDir, entry.relativePath);
+    if (entry.existed) {
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.copyFileSync(entry.backup, target);
+    } else {
+      fs.rmSync(target, { force: true });
+    }
+  }
 }
 
 function commitAndPushNormativeUpdate(rootDir, plan) {
@@ -638,16 +716,20 @@ function readUpdateLock(rootDir) {
     return null;
   }
 
-  return JSON.parse(fs.readFileSync(lockPath, "utf8"));
+  const raw = JSON.parse(fs.readFileSync(lockPath, "utf8"));
+  return isCurrentLock(raw) ? raw : convertLegacyLock(raw);
 }
 
 function createUpdateLock(source, remoteFiles) {
   return {
+    format: FORMAT,
     files: Object.fromEntries(remoteFiles.map((entry) => [
       toPosixPath(entry.relativePath),
       hashBuffer(entry.content),
     ])),
     managedFiles: remoteFiles.map((entry) => ({ path: toPosixPath(entry.relativePath) })),
+    marker: MARKER,
+    schema: VERSION,
     source: {
       label: source.label,
       ref: source.ref,
@@ -738,6 +820,7 @@ function isLocalExtensionPath(value) {
 }
 
 module.exports = {
+  applyPlan,
   buildUpdatePlan,
   collectRemoteGovernanceFiles,
   compareRemoteFiles,
@@ -746,6 +829,7 @@ module.exports = {
   hashTextContent,
   isRecognizedLegacyGovernanceFile,
   isLocalExtensionPath,
+  parseGovernanceManifest,
   help,
   main,
   mergePackageManifest,

@@ -7,9 +7,11 @@
 
 const fs = require("fs");
 const path = require("path");
+const { runHookChain } = require("../../../core/runtime/scripts/extension-contract");
 
-const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
 const HOOK_PATH = path.join(ROOT_DIR, ".agents", "hooks", "release.js");
+const CORE_HOOK_PATH = path.join(ROOT_DIR, ".agents", "hooks", "core.js");
 const EVENTS = new Set(["prepare", "verify", "published"]);
 
 class UsageError extends Error {}
@@ -18,33 +20,17 @@ function runReleaseHook(event, payload = {}) {
   if (!EVENTS.has(event)) {
     throw new UsageError(`EVENTO_HOOK_INVALIDO:${event || "(vazio)"}`);
   }
-  if (!fs.existsSync(HOOK_PATH)) {
-    return { event, executed: false };
-  }
-
-  // PROTECAO: hook recebe uma copia congelada para impedir mutacao acidental do fluxo comum.
-  const hook = require(HOOK_PATH);
-  const handler = typeof hook === "function" ? hook : hook && hook[event];
-
-  if (typeof handler !== "function") {
-    return { event, executed: false };
-  }
-
-  const result = handler(deepFreeze(JSON.parse(JSON.stringify(payload))));
-  if (result && typeof result.then === "function") {
-    throw new Error("Hook de release assincrono nao e suportado.");
-  }
-  return { event, executed: true, result: result || null };
+  const layers = [optionalHook("core", CORE_HOOK_PATH, event), optionalHook("release", HOOK_PATH, event)].filter(Boolean);
+  if (!layers.length) return { event, executed: false };
+  const result = runHookChain(event, payload, layers);
+  return { event, executed: true, result: result.observations };
 }
 
-function deepFreeze(value) {
-  if (value && typeof value === "object") {
-    Object.freeze(value);
-    for (const item of Object.values(value)) {
-      deepFreeze(item);
-    }
-  }
-  return value;
+function optionalHook(id, hookPath, event) {
+  if (!fs.existsSync(hookPath)) return null;
+  const hook = require(hookPath);
+  const handler = typeof hook === "function" ? hook : hook && hook[event];
+  return typeof handler === "function" ? { id, handler } : null;
 }
 
 if (require.main === module) {
@@ -62,4 +48,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { EVENTS, HOOK_PATH, runReleaseHook };
+module.exports = { CORE_HOOK_PATH, EVENTS, HOOK_PATH, runReleaseHook };

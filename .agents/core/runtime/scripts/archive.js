@@ -1,4 +1,4 @@
-// Autor: JeanCarloEM.com
+// Núcleo de runtime: arquivo e compactação.
 // Site do Autor: https://jeancarloem.com
 // Licenca: Mozilla Public License 2.0
 // Site da Licenca: https://www.mozilla.org/MPL/2.0/

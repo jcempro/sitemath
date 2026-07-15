@@ -1,4 +1,4 @@
-# webPageLike.md — Cenário Web Page Like
+# Cenário Web Page Like
 
 Extensão de `AGENTS.md` §17; aplicar `MN-2119`, `MN-DENS`, `MN-PRES`, `MN-IA-OPT`, `MN-VAL`, `MN-REF` e, para interface, `MN-API`, `MN-DEF`, `MN-OUT`, `MN-CMD`. RCF específico prevalece na matéria do projeto. Valores e stacks abaixo são padrões oficiais somente quando a condição existir.
 
@@ -7,6 +7,8 @@ Extensão de `AGENTS.md` §17; aplicar `MN-2119`, `MN-DENS`, `MN-PRES`, `MN-IA-O
 ### 1.1–1.3 Definição e evolução
 
 Abrange entrega consumida por navegador/engine: página estática, app cliente/SPA, widget, componente, biblioteca frontend, WASM, gerado, híbrido ou template. Este cenário DEVE padronizar arquitetura, interface, stack, build, distribuição, publicação e UI sem imobilizar mecanismo interno. Stack PODE evoluir se a interface pública permanecer; combinação, capacidade ou comportamento aplicável NÃO DEVE ser removido por equivalência abstrata.
+
+É cenário de borda composto, não classe-base de herança múltipla: DEVE declarar e ordenar capacidades de navegador, saída estática, hospedagem, editorial ou outras aplicáveis, conforme `core/contracts.md`. Jekyll, GitHub Pages, Git, gerador estático e hospedagem são capacidades independentes; nenhum PODE ser inferido por outro sem RCF, contrato e validação da combinação.
 
 ### 1.4 Matriz tecnológica
 
@@ -34,7 +36,7 @@ Menu DEVE priorizar HTML/CSS/nativo; JS/TS só PODE aprimorar montagem, estado, 
 
 ### 1.15 Carregamento
 
-Loader global DEVE separar indicador central de barra superior de `0.5rem`/equivalente, sincronizar estado, tema e ocultação. Progresso DEVE refletir DOM/recurso quando viável, distinguir estimativa relevante, degradar com segurança, suportar conexão/dispositivo limitado e baseline 2018 se ausente outra. NÃO DEVE ocultar indefinidamente, bloquear `noscript`, impedir acesso em erro parcial ou depender de externo indispensável. Erro DEVE usar fallback local mínimo.
+Loader global DEVE separar indicador central de barra superior visualmente distinta da animação, sincronizar estado, tema e ocultação; dimensão e identidade pertencem ao token ou RCF específico. Progresso DEVE refletir DOM/recurso quando viável, distinguir estimativa relevante, degradar com segurança, suportar conexão/dispositivo limitado e a baseline de navegadores declarada pelo projeto. NÃO DEVE ocultar indefinidamente, bloquear `noscript`, impedir acesso em erro parcial ou depender de externo indispensável. Erro DEVE usar fallback local mínimo.
 
 ### 1.16–1.18 Fallback, 404 e HTML
 
@@ -50,21 +52,21 @@ Aplicar §1. Antes de alterar bundler/framework/runtime, DEVE validar gerador, h
 
 ### 3.1–3.5 Agenda e distribuição
 
-§§1–2 aplicam cumulativamente. `_scheduled`/equivalente DEVE separar rascunho, aprovado/agendado e publicado; agendado NÃO DEVE integrar build, URL pública ou aparecer antes da data verificável. Workflow DEVE executar ao menos diariamente na zona editorial, converter explicitamente `00:01` quando adotado e executar verificar → selecionar elegível → preparar → compilar → atualizar → publicar → validar → registrar. Distribuição externa só PODE iniciar após compilação, publicação e disponibilidade; falha anterior DEVE bloqueá-la.
+§§1–2 aplicam cumulativamente. `_scheduled`/equivalente DEVE separar rascunho, aprovado/agendado e publicado; agendado NÃO DEVE integrar build, URL pública ou aparecer antes da data verificável. Workflow DEVE executar na cadência e zona editorial declaradas; horário de corte, quando adotado, DEVE converter fuso explicitamente e executar verificar → selecionar elegível → preparar → compilar → atualizar → publicar → validar → registrar. Distribuição externa só PODE iniciar após compilação, publicação e disponibilidade; falha anterior DEVE bloqueá-la.
 
 Integração social adotada DEVE tratar cada plataforma/perfil, priorizar open source madura → oficial → configurada → fallback, publicar título/resumo/imagem/hashtag/link conforme disponível, isolar segredo, ser idempotente, limitar tentativa, recuperar e registrar. NÃO DEVE travar, repetir indefinidamente, terminar sem registro, duplicar publicação ou envolver integração adequada sem ganho.
 
 ### 3.6–3.8 Listagem, autor e formato
 
-Grade/card NÃO DEVE causar overflow; conteúdo DEVE validar `320px`/equivalente quando baseline. Home e relacionados DEVEM limitar-se a 6/equivalente; relacionado NÃO DEVE repetir atual. Recentes DEVE usar até 6/equivalente por JSON/feed após carga essencial, contêiner inicial vazio quando dinâmico, card reutilizado, DOM seguro/`textContent`, sem cookie/localStorage e falha não bloqueante. `article_authors` válido exige `name`/`bio`; `url`/`avatar` são opcionais; inválido NÃO renderiza; sem avatar usa ilustração local; primeiro destaca, adicionais compactam, três ou mais densificam, semântica é `Person` e post legado NÃO DEVE exigir migração.
+Grade/card NÃO DEVE causar overflow; conteúdo DEVE validar a menor viewport e os pontos de quebra declarados pela baseline. Sem baseline, RCF específico DEVE declarar superfície representativa e critério responsivo antes da implementação. Home, relacionados e recentes DEVEM ter limite, paginação ou carregamento progressivo declarados pelo template/RCF específico e compatíveis com leitura, desempenho e navegação; relacionado NÃO DEVE repetir atual. Recente por JSON/feed só PODE iniciar após carga essencial, com contêiner inicial vazio quando dinâmico, card reutilizado, DOM seguro/`textContent`, sem cookie/localStorage e falha não bloqueante. Rótulo é localizado/semântico e declarado pelo projeto. Modelo de autor DEVE declarar identidade e resumo obrigatórios, campos opcionais, regra de invalidez, fallback visual, destaque e compactação; nomenclatura de campo e limiar visual pertencem ao adaptador/template. Semântica DEVE representar pessoa/autoria quando aplicável e post legado NÃO DEVE exigir migração.
 
-Formato textual exclusivo do artigo: indentação, se adotada, DEVE usar CSS/Sass `4em`/equivalente salvo token e excluir título/lista/tabela/imagem/legenda/nota/blockquote/painel. Blockquote NÃO DEVE italicizar corpo automaticamente; subcitação PODE; referência DEVE ocupar linha própria com `—`, menor; contexto autoral só PODE existir com base segura. Texto comum NÃO DEVE italicizar por padrão; itálico semântico/autoral DEVE sobreviver; nota DEVE ser compacta.
+Formato textual exclusivo do artigo: indentação, se adotada, DEVE usar CSS/Sass e token de espaçamento declarado pelo projeto, excluindo título/lista/tabela/imagem/legenda/nota/blockquote/painel. Blockquote NÃO DEVE italicizar corpo automaticamente; subcitação PODE; referência DEVE ocupar linha própria com `—`, menor; contexto autoral só PODE existir com base segura. Texto comum NÃO DEVE italicizar por padrão; itálico semântico/autoral DEVE sobreviver; nota DEVE ser compacta. Número, rótulo, dimensão ou limiar visual só PODE constar deste cenário quando constituir contrato reutilizável verificável; escolha de template pertence ao RCF específico, token ou configuração declarada.
 
 ### 3.9–3.15 Autoria, IA e rigor
 
 Revisão DEVE preservar estilo, vocabulário, ritmo, argumentação, estrutura, pontuação, pausa, literatura e retórica; NÃO DEVE padronizar voz, substituir identidade ou corrigir peculiaridade intencional. Prioridade: identidade → intenção → problema real → clareza → organização. Alteração semântica por IA DEVE marcar a menor região no fonte com comentário invisível, persistente, pesquisável e neutro, por exemplo `AI-PROCESSED:START/END`; reescrita, reorganização, expansão, resumo, simplificação, adaptação ou geração exige marcação; correção ortográfica/gramatical/tipográfica/link/metadado não. Amostra de estilo DEVE priorizar original não marcado → rascunho original → publicado não marcado → correção mecânica → IA; assistido só PODE complementar.
 
-Exceto reflexão/testemunho/opinião/literatura/poesia identificada, artigo DEVE buscar verificabilidade; fato, história, estatística, estudo, técnica, citação, tradução e controvérsia DEVERIAM ter fonte válida, confiável, rastreável e proporcional. Artigo técnico/sermão aplicável DEVE seguir `Afirmação → referência imediata`; NÃO DEVE concentrar fonte distante ou citar fonte que não sustente a alegação. Nota DEVE ter mecanismo compatível, id estável, ida/retorno, teclado/mobile e baixa interferência. Referência/Bibliografia DEVERIA derivar de nota/metadado; ABNT DEVE ser padrão se nenhum outro existir; biblioteca DEVE ser compatível, mantida, acessível e degradar sem invalidar conteúdo.
+Exceto reflexão/testemunho/opinião/literatura/poesia identificada, artigo DEVE buscar verificabilidade; fato, história, estatística, estudo, técnica, citação, tradução e controvérsia DEVERIAM ter fonte válida, confiável, rastreável e proporcional. Artigo técnico/sermão aplicável DEVE seguir `Afirmação → referência imediata`; NÃO DEVE concentrar fonte distante ou citar fonte que não sustente a alegação. Nota DEVE ter mecanismo compatível, id estável, ida/retorno, teclado/mobile e baixa interferência. Referência/Bibliografia DEVERIA derivar de nota/metadado; padrão bibliográfico decorre da política editorial, jurisdição ou RCF específico; biblioteca DEVE ser compatível, mantida, acessível e degradar sem invalidar conteúdo.
 
 ### 3.16–3.17 Privacidade e conclusão
 

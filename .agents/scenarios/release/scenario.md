@@ -1,4 +1,4 @@
-# Release
+# Cenário Release
 
 Extensão de `AGENTS.md` §17; aplicar `MN-2119`, `MN-DENS`, `MN-PRES`, `MN-API`, `MN-DEF`, `MN-OUT`, `MN-CMD`, `MN-VAL` e `MN-REF`. Aplica-se somente a repositório que publique versões; fora desse escopo NÃO DEVE carregar script, comando, workflow ou custo adicional deste cenário.
 
