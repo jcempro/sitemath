@@ -196,25 +196,25 @@ Objetivo: Publicar o bootstrap inicial sem persistir token ou OTP, configurar Tr
 </tr>
 <tr>
 <td>Publicar localmente @jeancarloem/sitemath@0.0.1</td>
-<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td rowspan="2">Relacao confiavel</td>
 <td>Configurar npm trust github para jcempro/sitemath e release.yml</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Consultar o registro e a relacao configurada</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td rowspan="2">Encerramento</td>
 <td>Regenerar handoff e registrar evidencias</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Commitar, enviar e convergir dev para main</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 </tbody>
 </table>
