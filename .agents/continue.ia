@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0440.00
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0450.00
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -122,24 +122,24 @@ falhas=Validacao NPM inicial tentou cache global Windows sem permissao; validate
 pendencias=Configurar o segredo NPM_TOKEN e habilitar GitHub Pages no repositorio antes da primeira execucao remota. Nao publicar release sem orientacao humana explicita.
 proximo=Nenhuma implementacao pendente; proxima release depende de orientacao humana e de segredo configurado.
 
-FT-004|nome=Bootstrap NPM e Trusted Publishing|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260715.0345.00|atualizacao=20260715.0440.00
+FT-004|nome=Bootstrap NPM e Trusted Publishing|escopo=Tecnico|prioridade=alta|status=concluida|inicio=20260715.0345.00|atualizacao=20260715.0450.00|conclusao=20260715.0450.00
 objetivo=Publicar o bootstrap inicial sem persistir token ou OTP, configurar Trusted Publishing OIDC para o workflow de release e verificar o contrato remoto.
 1/4 Contrato e precondicoes [concluido]
   1/3 Confirmar identidade npm e inexistencia do pacote no registro [concluido]
   2/3 Registrar a excecao de bootstrap e a configuracao OIDC no RCF e README [concluido]
   3/3 Remover NPM_TOKEN do workflow e declarar id-token: write [concluido]
-2/4 Validacao e versao [em andamento]
+2/4 Validacao e versao [concluido]
   1/3 Validar suite, tarball e YAML apos migracao [concluido]
   2/3 Commitar e enviar a configuracao OIDC em dev [concluido]
-  3/3 Publicar localmente @jeancarloem/sitemath@0.0.1 [em andamento]
-3/4 Relacao confiavel [pendente]
-  1/2 Configurar npm trust github para jcempro/sitemath e release.yml [pendente]
-  2/2 Consultar o registro e a relacao configurada [pendente]
-4/4 Encerramento [pendente]
-  1/2 Regenerar handoff e registrar evidencias [pendente]
-  2/2 Commitar, enviar e convergir dev para main [pendente]
-decisoes=O usuario confirmou o ajuste da identidade publica para o escopo controlado @jeancarloem. O bootstrap local e necessario porque npm trust exige pacote previamente publicado. O comando normativo de bootstrap e npm publish --access public, que pode concluir autenticacao no navegador por chave publica; nenhum OTP e persistido. O workflow normal usa OIDC, sem NPM_TOKEN persistido, e conserva o vinculo GitHub/NPM apos o bootstrap. O manifesto declara repository em formato NPM canonico e fixa publishConfig do registro publico e acesso public. A conta controla somente @jeancarloem; a criacao de token temporaria foi cancelada antes de gerar qualquer segredo.
-verificacoes=npm whoami=jeancarloem; npm profile get confirmou 2FA auth-and-writes; o formulario NPM de token granular exibiu somente o escopo @jeancarloem e nenhuma organizacao; npm view @jcem/sitemath retornou E404; npm run check, validate:package e YAML aprovaram; commit/push OIDC=4e995a8; npm publish inspecionou o tarball com 5 arquivos e confirmou acesso publico como destino; validate:package aprovou novamente apos publishConfig; npm 12.0.1 exige Node ^22.22.2 e a maquina possui 22.21.0; npm 11.18.0 executa neste Node; o log confirmou PUT 401 antes do WebAuthn e PUT 404 apos autenticacao no escopo nao controlado; npm stage publish . --access public retornou POST 404 para o pacote no escopo nao controlado; documentacao oficial npm trust exige npm >=11.15, 2FA, permissao de escrita e pacote existente; sintaxe prevista: npm trust github @jeancarloem/sitemath --file release.yml --repo jcempro/sitemath --allow-publish --yes.
-falhas=PUBLICACAO_NAO_CONFIRMADA: @jcem nao pertence a jeancarloem. A correcao da identidade para @jeancarloem/sitemath esta pendente de validacao, commit e publicacao. Nenhum pacote foi confirmado, nenhum token foi gerado e nenhum segredo foi persistido.
-pendencias=Validar e enviar a correcao de identidade; publicar @jeancarloem/sitemath, confirmar a versao no registro, configurar e consultar npm trust github, regenerar handoff, commitar e convergir dev para main.
-proximo=Validar o pacote com a nova identidade e publicar o bootstrap por npm publish --access public.
+  3/3 Publicar localmente @jeancarloem/sitemath@0.0.1 [concluido]
+3/4 Relacao confiavel [concluido]
+  1/2 Configurar npm trust github para jcempro/sitemath e release.yml [concluido]
+  2/2 Consultar o registro e a relacao configurada [concluido]
+4/4 Encerramento [concluido]
+  1/2 Regenerar handoff e registrar evidencias [concluido]
+  2/2 Commitar, enviar e convergir dev para main [concluido]
+decisoes=O usuario confirmou o ajuste da identidade publica para o escopo controlado @jeancarloem. O bootstrap inicial foi publicado sem token persistido. O workflow normal usa Trusted Publishing OIDC, sem NPM_TOKEN, e conserva o vinculo GitHub/NPM. O manifesto declara repository em formato NPM canonico e fixa publishConfig do registro publico e acesso public. A conta controla somente @jeancarloem; a criacao de token temporaria foi cancelada antes de gerar qualquer segredo.
+verificacoes=npm whoami=jeancarloem; npm profile get confirmou 2FA auth-and-writes; o formulario NPM de token granular exibiu somente o escopo @jeancarloem e nenhuma organizacao; npm run check aprovou TypeScript estrito, 4 testes e todos os targets Vite/Jekyll; validate:package confirmou os 5 arquivos autorizados; npm publish --access public com npm 11.18.0 retornou sucesso para @jeancarloem/sitemath@0.0.1; npm access list packages retornou read-write; npm access get status retornou public; npm dist-tag ls retornou latest:0.0.1; npm view publico confirmou version 0.0.1 e latest; npm trust github criou a relacao f34792ff-93fe-4878-8632-98aaaa108346 para repository jcempro/sitemath, file release.yml e permissions publish.
+falhas=O escopo inicial @jcem nao pertencia a jeancarloem e retornava E404 apos WebAuthn; a identidade foi corrigida para @jeancarloem/sitemath. npm trust list exigiu novo desafio 2FA apos a criacao, mas a resposta de criacao registrou integralmente o vinculo. Nenhum token foi gerado ou persistido.
+pendencias=Nenhuma.
+proximo=Nenhum; FT-004 concluida.
