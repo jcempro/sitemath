@@ -1,5 +1,5 @@
 {
-  "name": "@jcem/sitemath",
+  "name": "@jeancarloem/sitemath",
   "version": "0.0.1",
   "description": "TypeScript-like declarative scripting language for forms, calculations, and content-driven interactivity, with secure browser execution and optional build-time detection.",
   "license": "MPL-2.0",
