@@ -4,7 +4,10 @@
   "description": "TypeScript-like declarative scripting language for forms, calculations, and content-driven interactivity, with secure browser execution and optional build-time detection.",
   "license": "MPL-2.0",
   "author": "JeanCarloEM (https://jeancarloem.com)",
-  "repository": "https://github.com/jcempro/sitemath",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcempro/sitemath.git"
+  },
   "homepage": "https://sitemath.jcemp.pro",
   "type": "commonjs",
   "main": "dist/sitemath.js",
@@ -19,6 +22,10 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=24"
   },
