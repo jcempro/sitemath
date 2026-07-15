@@ -8,6 +8,14 @@
   "homepage": "https://sitemath.jcemp.pro",
   "type": "commonjs",
   "main": "dist/sitemath.js",
+  "types": "dist/sitemath.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/sitemath.d.ts",
+      "require": "./dist/sitemath.js",
+      "default": "./dist/sitemath.js"
+    }
+  },
   "files": [
     "dist"
   ],
@@ -15,15 +23,20 @@
     "node": ">=24"
   },
   "scripts": {
-    "build": "node scripts/sitemath-build.js",
-    "check": "npm run lint && npm run test && npm run build && npm run test:targets",
-    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "dev": "node scripts/sitemath-serve.js",
-    "lint": "node --check src/sitemath.js && node --check scripts/sitemath-build.js && node --check scripts/sitemath-detect.js && node --check scripts/test-targets.js",
-    "test": "node --test tests/sitemath.test.js",
-    "test:targets": "node scripts/test-targets.js",
-    "test:targets:web": "node scripts/test-targets.js --web",
-    "test:targets:jekyll": "node scripts/test-targets.js --jekyll",
+    "build": "npm run compile:tools && node .tmp/tools/scripts/sitemath-build.js",
+    "check": "npm run lint && npm run test && npm run test:targets",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true});require('fs').rmSync('.tmp',{recursive:true,force:true})\"",
+    "compile:tools": "tsc --project tsconfig.tools.json",
+    "dev": "npm run compile:tools && node .tmp/tools/scripts/sitemath-serve.js",
+    "detect": "npm run build && node .tmp/tools/scripts/sitemath-detect.js",
+    "lint": "npm run typecheck",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "npm run build && node --test .tmp/tools/tests/sitemath.test.js",
+    "test:targets": "npm run build && node .tmp/tools/scripts/test-targets.js",
+    "test:targets:web": "npm run build && node .tmp/tools/scripts/test-targets.js --web",
+    "test:targets:jekyll": "npm run build && node .tmp/tools/scripts/test-targets.js --jekyll",
+    "validate:package": "npm run build && node .tmp/tools/scripts/validate-package.js",
+    "release:publish": "npm run compile:tools && node .tmp/tools/scripts/release-publish.js",
     "agents:update": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:agents": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:filter": "node .agents/core/runtime/scripts/to-ia.js --command agent:filter",
@@ -136,7 +149,7 @@
       {
         "id": "node",
         "runtime": "node",
-        "module": "src/sitemath.js",
+        "module": "dist/sitemath.js",
         "export": "createNodeAdapter",
         "version": 1
       }
@@ -153,9 +166,15 @@
     "dependencies": [],
     "optionalDependencies": []
   },
+  "browserslist": [
+    "baseline widely available with downstream"
+  ],
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
+    "@types/node": "^26.1.1",
     "@vitejs/plugin-react": "^5.2.0",
+    "browserslist": "^4.28.6",
+    "browserslist-to-esbuild": "^2.1.1",
     "preact": "^10.29.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
