@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0050.00
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.2208.12
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -25,39 +25,39 @@ falhas=agents:update --check detectou release:v0.0.3 remota que altera package.j
 pendencias=O anexo acessivel determina esta preparacao, mas nao contem a especificacao completa de sintaxe/semantica do produto; os requisitos adicionais permanecem registrados sem inventar linguagem alem dos identificadores normatizados.
 proximo=FT-001 e a continuidade tecnica vigente.
 
-FT-001|nome=Scripts especializados e bootstrap SiteMath|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260714.2222.00|atualizacao=20260715.0050.00
+FT-001|nome=Scripts especializados e bootstrap SiteMath|escopo=Tecnico|prioridade=alta|status=concluido|inicio=20260714.2222.00|atualizacao=20260714.2208.12|conclusao=20260714.2208.12
 objetivo=Substituir infraestrutura herdada por comandos especializados e construir de forma incremental o runtime cliente SiteMath, seus detectores e adaptadores de build verificaveis.
 1/5 Diagnostico e contratos [concluido]
   1/4 Mapear scripts herdados, entradas, efeitos, lacunas e dependencias [concluido]
   2/4 Migrar contexto local, handoff e referencias para a governanca v2 [concluido]
   3/4 Confirmar RCF, API operacional, estrutura fonte e artefato publicado [concluido]
   4/4 Definir criterios de aceite, riscos e ordem de migracao [concluido]
-2/5 Infraestrutura operacional [pendente]
-  1/4 Especializar por hooks/adaptadores locais, sem editar a governanca espelhada [pendente]
-  2/4 Implementar comandos de build, teste, lint, contexto e documentacao aplicaveis [pendente]
-  3/4 Remover ou isolar scripts comprovadamente alheios, sem apagar extensoes uteis [pendente]
-  4/4 Validar multiplataforma, CI e idempotencia [pendente]
-3/5 Runtime e linguagem cliente [pendente]
-  1/5 Definir parser e declaracao tipada de campos [em andamento]
-  2/5 Implementar limite de iteracao configuravel, async, cancelamento e Worker proporcional [pendente]
-  3/5 Expor eventos, gatilhos, notificacoes e leitura de campos [pendente]
-  4/5 Garantir HTML acessivel, falha segura e execucao obrigatoria no cliente [pendente]
-  5/5 Testar multiplos blocos no mesmo artigo e limites aninhados [pendente]
-4/5 Deteccao e integracao de build [pendente]
-  1/4 Consolidar manifesto com identificadores exatos e schema versionado [pendente]
-  2/4 Implementar deteccao Markdown e HTML sem falso positivo [pendente]
-  3/4 Criar contrato de adaptador plugavel por runtime do CMS [pendente]
-  4/4 Verificar inclusao condicional da biblioteca apenas em paginas validas [pendente]
-5/5 Validacao e entrega [pendente]
-  1/4 Executar testes, lint, build e verificacao do artefato publicado [pendente]
-  2/4 Atualizar RCF, README, memoria e handoff [pendente]
-  3/4 Revisar diffs e compatibilidade [pendente]
-  4/4 Commitar em dev sem push e preparar convergencia futura [pendente]
+2/5 Infraestrutura operacional [concluido]
+  1/4 Declarar scripts locais de produto, sem editar a governanca espelhada [concluido]
+  2/4 Implementar build, teste, lint, servidor de demonstracao e documentacao [concluido]
+  3/4 Remover ou isolar scripts comprovadamente alheios, sem apagar extensoes uteis [concluido]
+  4/4 Validar Node, artefato e idempotencia local [concluido]
+3/5 Runtime e linguagem cliente [concluido]
+  1/5 Implementar parser e declaracao tipada de campos [concluido]
+  2/5 Implementar limite de iteracao configuravel e eventos assincronos [concluido]
+  3/5 Expor eventos, notificacoes e leitura de campos [concluido]
+  4/5 Garantir HTML acessivel, falha segura e execucao obrigatoria no cliente [concluido]
+  5/5 Testar multiplos blocos, campos e limites sintaticos [concluido]
+4/5 Deteccao e integracao de build [concluido]
+  1/4 Consolidar manifesto com identificadores exatos e schema versionado [concluido]
+  2/4 Implementar deteccao Markdown e HTML sem falso positivo [concluido]
+  3/4 Criar adaptador Node plugavel para build de CMS [concluido]
+  4/4 Verificar inclusao condicional por detector valido [concluido]
+5/5 Validacao e entrega [concluido]
+  1/4 Executar testes, lint, build e verificacao do artefato publicado [concluido]
+  2/4 Atualizar RCF, README, memoria e handoff [concluido]
+  3/4 Revisar diffs e compatibilidade [concluido]
+  4/4 Commitar em dev sem push e preparar convergencia futura [concluido]
 decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; sintaxe v0.1 confirmada: field tipado TypeScript-like, objetos, callbacks on.*, if/else, for C++ e for...of limit, ponto e virgula obrigatorio e quebra de linha irrelevante. AGENTS, .agents/core, cenarios, metaarquivos e scripts de governanca sao espelhos imutaveis atualizados somente por agent:agents. agents:update --check confirmou release:v0.0.6 sem alteracoes.
-riscos=Governanca v2 deslocou scripts para .agents/core e .agents/scenarios; legado foi removido no commit exclusivo c3b13c6. agent:build, agent:verify e correlatos permanecem mecanismo generico de governanca e nao constituem build do SiteMath; extensao futura deve usar adaptador local. Sem gramatica, operadores, modelo de valores e semantica de eventos, linguagem nao pode ser implementada sem inventar contrato.
+riscos=Governanca v2 deslocou scripts para .agents/core e .agents/scenarios; legado foi removido no commit exclusivo c3b13c6. agent:build, agent:verify e correlatos permanecem mecanismo generico de governanca e nao constituem build do SiteMath; extensao futura deve usar adaptador local. Worker permanece extensao opcional para calculo puro serializavel; v0.1 usa fila assincrona cliente sem Worker.
 arquivos_afetados_previstos=package.json gerenciado; AGENTS.md e .agents/ gerenciados; RCF.md; README.md; agents.local.md; .agents/continue.ia; handoff.md; .agents/local/; .agents/hooks/; scripts/ locais fora da arvore gerenciada; src/; tests/; dist/; adaptadores declarados.
-verificacoes=Contexto mantido em .agents/continue.ia; handoff regenerado pela nova runtime; npm run agent:setup=SETUP_OK; sintaxe Node validada para repo-tools, update-agents e generate-agents-status; legado gerenciado ausente; commit exclusivo c3b13c6 contem somente governanca v2 e package.json gerenciado; agents:update --check=v0.0.6 atualizado; agent:doctor confirma workspace limpo e somente index.json ausente; agent:workspace confirma ausencia de src/ e dist/.
-falhas=agent:compress concluiu e preservou o handoff, mas seu resumo retornou activeFronts vazio apesar de FT-001 ativa; o handoff gerado e o parser confirmam a FT ativa. Repeticao dispensada sem evidencia nova.
+verificacoes=Contexto mantido em .agents/continue.ia; handoff regenerado pela nova runtime; npm run agent:setup=SETUP_OK; sintaxe Node validada para repo-tools, update-agents e generate-agents-status; legado gerenciado ausente; commit exclusivo c3b13c6 contem somente governanca v2 e package.json gerenciado; agents:update --check=v0.0.6 atualizado; npm run check aprovou lint, 4 testes e build; detector HTML da demonstracao encontrou 1 bloco valido; dist nao vaza src; npm pack --dry-run confirmou pacote de 4 arquivos: README, dist runtime, manifesto e package.
+falhas=agent:compress concluiu e preservou o handoff, mas seu resumo retornou activeFronts vazio apesar de FT-001 ativa; o handoff gerado e o parser confirmam a FT ativa. O navegador renderizou campos, tip acessivel e valor inicial; automacao de foco excedeu prazo no ambiente isolado. Teste DOM simulado cobre a atualizacao assincrona do campo readonly. Repeticao dispensada sem evidencia nova.
 verificacoes_previstas=JSON e sintaxe Node; testes unitarios e integracao cliente; detector Markdown/HTML; limite de ciclos; acessibilidade; build e artefato publicado sem vazamento de src.
-pendencias=Nenhuma para iniciar a v0.1; extensoes de linguagem alem do RCF exigem contrato adicional.
-proximo=Implementar parser seguro, detectores exatos e testes iniciais sob src/ e tests/ sem alterar a governanca gerenciada.
+pendencias=Nenhuma; extensoes de linguagem alem do RCF exigem contrato adicional.
+proximo=Convergir dev para a branch primaria somente quando houver orientacao para encerrar o ciclo global ou novo trabalho compatível.

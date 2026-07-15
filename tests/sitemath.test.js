@@ -45,7 +45,7 @@ test("runtime cliente atualiza campo readonly de forma assincrona", async () => 
   script.textContent = `field idade: number = { label: "Idade" }; field aceite: checkbox = { label: "Aceite" }; field total: number = { label: "Total", readonly: true }; on.change([idade, aceite], () => { if (aceite) { total = idade * 2; } });`;
   const document = { forms: [], createElement: (tagName) => new Element(tagName), querySelectorAll: () => [script] };
   const [instance] = SiteMath.mount(document);
-  const controls = document.forms[0].children.map((wrapper) => wrapper.children.at(-1));
+  const controls = document.forms[0].children.filter((wrapper) => String(wrapper.className || "").startsWith("sitemath-field")).map((wrapper) => wrapper.children.at(-1));
   const idade = controls[0]; const aceite = controls[1];
   idade.value = "21"; aceite.checked = true;
   for (const listener of idade.listeners.change) listener({});

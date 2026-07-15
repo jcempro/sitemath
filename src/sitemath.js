@@ -188,6 +188,7 @@
     let ast;
     try { ast = parse(script.textContent || ""); } catch (error) { emit(script, "sitemath:error", diagnostic(error)); return { error: diagnostic(error) }; }
     const form = document.createElement("form"); form.className = "sitemath"; form.noValidate = true; script.insertAdjacentElement("afterend", form);
+    const errorRegion = document.createElement("div"); errorRegion.className = "sitemath-error"; errorRegion.setAttribute("role", "alert"); errorRegion.setAttribute("aria-live", "assertive"); form.append(errorRegion);
     const fields = {}; const controls = {};
     for (const field of ast.fields) renderField(document, form, field, fields, controls);
     const handlers = Object.fromEntries(ast.events.map((event) => [event.name, event]));
@@ -197,7 +198,7 @@
       const scope = { ...fields, fields, event: event || {}, notify, min: Math.min, max: Math.max, sum: (values) => [...values].reduce((total, value) => total + Number(value), 0), price: (value) => { if (typeof config.price !== "function") throw new SiteMathError("PRICE_RESOLVER_MISSING", "Resolvedor price ausente."); return config.price(value); }, limit: (values, limit) => [...values].slice(0, Math.max(0, Math.min(Number(limit), config.maxIterations))) };
       execute(handler.body, scope, { left: Number(config.maxIterations) || 500 });
       syncControls(ast.fields, fields, controls);
-    }).catch((error) => { const payload = diagnostic(error); emit(form, "sitemath:error", payload); const handler = handlers.error; if (handler && name !== "error") run("error", payload); });
+    }).catch((error) => { const payload = diagnostic(error); errorRegion.textContent = payload.message; emit(form, "sitemath:error", payload); const handler = handlers.error; if (handler && name !== "error") run("error", payload); });
     for (const [id, control] of Object.entries(controls)) control.addEventListener("change", () => { fields[id] = readControl(control); run("change", { type: "change", field: id }); });
     form.addEventListener("submit", (event) => { if (handlers.submit) event.preventDefault(); const wrapped = { preventDefault: () => event.preventDefault() }; run("submit", wrapped); });
     run("init", { type: "init" });
