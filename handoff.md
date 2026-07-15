@@ -167,7 +167,7 @@ Objetivo: Migrar a implementacao SiteMath para TypeScript puro, alinhar a compil
 
 ## FT-004 - Bootstrap NPM e Trusted Publishing
 
-Objetivo: Publicar o bootstrap inicial sem persistir token, configurar Trusted Publishing OIDC para o workflow de release e verificar o contrato remoto.
+Objetivo: Publicar o bootstrap inicial sem persistir token ou OTP, configurar Trusted Publishing OIDC para o workflow de release e verificar o contrato remoto.
 
 <table>
 <thead><tr><th>Etapa</th><th>Tarefa</th><th>Status</th></tr></thead>
