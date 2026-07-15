@@ -156,11 +156,11 @@ Objetivo: Migrar a implementacao SiteMath para TypeScript puro, alinhar a compil
 </tr>
 <tr>
 <td>Regenerar handoff, commitar e convergir dev para main</td>
-<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Enviar a convergencia para origin</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 </tbody>
 </table>
