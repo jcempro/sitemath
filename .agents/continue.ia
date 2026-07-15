@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0015.00
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260715.0025.00
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -92,7 +92,7 @@ falhas=No sandbox local, Bundler nao acessa as gemas instaladas sob perfil do us
 pendencias=Nenhuma.
 proximo=Regenerar handoff, commitar FT-002 em dev e convergir para main sem push.
 
-FT-003|nome=TypeScript, documentacao e entrega|escopo=Tecnico|prioridade=alta|status=em_andamento|inicio=20260714.2330.00|atualizacao=20260715.0015.00
+FT-003|nome=TypeScript, documentacao e entrega|escopo=Tecnico|prioridade=alta|status=em_andamento|inicio=20260714.2330.00|atualizacao=20260715.0025.00
 objetivo=Migrar a implementacao SiteMath para TypeScript puro, alinhar a compilacao a Baseline Widely Available com downstream e entregar documentacao GitHub Pages e pipeline atomico NPM para GitHub Release.
 1/5 Blueprint e precondicao Git [concluido]
   1/3 Registrar arquitetura, baseline e testes funcionais no RCF [concluido]
@@ -115,9 +115,9 @@ objetivo=Migrar a implementacao SiteMath para TypeScript puro, alinhar a compila
   1/4 Executar typecheck, unidade, matriz e validacao de workflows [concluido]
   2/4 Validar a documentacao em navegador [concluido]
   3/4 Regenerar handoff, commitar e convergir dev para main [em_andamento]
-  4/4 Enviar a convergencia para origin [em_andamento]
+  4/4 Enviar a convergencia para origin [pendente]
 decisoes=O requisito explicito prevalece: implementacao de produto em TypeScript puro. A baseline usa a consulta Browserslist exata baseline widely available with downstream, com janela de 30 meses; ES2022 e piso sintatico sem polyfills. Site Pages e release de pacote sao workflows independentes.
 verificacoes=Blueprint exclusivo 76c8bb3 enviado antes do codigo; npm run check aprovou TypeScript estrito, 4 testes unitarios, HTML estatico, Vite JS, Vite TS, React, Preact e Jekyll; npm run validate:package e npm pack --dry-run confirmaram 5 arquivos no pacote; Ruby validou os workflows YAML; navegador conferiu docs sem JavaScript e runtime estatico com label, tip, placeholder e campos.
 falhas=Validacao NPM inicial tentou cache global Windows sem permissao; validate-package passou a usar .tmp/npm-cache isolado e foi revalidado. Build local usa Node 22, abaixo do engine declarado >=24, mas CI fixa Node 24; nao houve falha semantica na suite.
 pendencias=Configurar o segredo NPM_TOKEN e habilitar GitHub Pages no repositorio antes da primeira execucao remota. Nao publicar release sem orientacao humana explicita.
-proximo=Commitar documentacao, workflows, memoria e handoff; convergir dev para main e enviar ambas as branches.
+proximo=Regenerar handoff, commitar estado final, convergir dev para main e enviar ambas as branches.
