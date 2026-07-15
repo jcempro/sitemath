@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 concurrency:
   group: sitemath-release
@@ -52,8 +53,6 @@ jobs:
           echo "path=.tmp/release/$TARBALL" >> "$GITHUB_OUTPUT"
       - name: Publicar no NPM
         run: npm publish "${{ steps.pack.outputs.path }}" --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Criar GitHub Release após NPM
         env:
           GH_TOKEN: ${{ github.token }}

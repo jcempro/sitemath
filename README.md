@@ -22,7 +22,7 @@ O projeto requer Node.js 24 ou superior. A fonte de produto, automação e teste
 - `npm run agent:handoff`
 - `npm run agent:status`
 
-O desenvolvimento ocorre em `dev`. O comando de release cria o único gatilho padrão `release`; o workflow valida, publica o tarball no NPM e somente depois cria a GitHub Release. É necessário configurar o segredo `NPM_TOKEN` no repositório antes de uma publicação real.
+O desenvolvimento ocorre em `dev`. O comando de release cria o único gatilho padrão `release`; o workflow valida, publica o tarball no NPM e somente depois cria a GitHub Release. As releases automatizadas usam Trusted Publishing OIDC e não usam `NPM_TOKEN`. O primeiro bootstrap é publicado localmente por mantenedor autenticado e, depois dele, o pacote é vinculado ao repositório e ao workflow `release.yml` no NPM.
 
 ## Matriz de desenvolvimento
 

@@ -74,7 +74,7 @@ O workflow de documentação DEVE usar GitHub Pages, executar somente build/vali
 
 O único gatilho de release é o arquivo raiz `release`, criado por `agent:release:trigger <versao>` e consumido pelo workflow `.github/workflows/release.yml`. O workflow DEVE validar worktree e versão explícita, instalar dependências bloqueadas, executar a suíte integral, gerar o pacote, validar o conteúdo com `npm pack --dry-run`, publicar o tarball no NPM e somente após êxito criar a GitHub Release vinculada à tag `v<versao>`. Falha em qualquer etapa DEVE impedir a etapa dependente; a ordem NPM → GitHub Release impede release público sem pacote efetivamente publicado.
 
-O workflow remove o gatilho em commit `release: v<versao>` pela rotina gerenciada, preserva rastreabilidade da tag, e não reutiliza `publish` para release. O pacote NPM DEVE conter somente arquivos declarados em `package.json.files`, limitados a runtime compilado, manifesto de linguagem e declarações de tipo dentro de `dist/`, além dos metadados obrigatórios do NPM. Código-fonte, testes, fixtures, documentação do site, arquivos de ambiente, workflows, governança e ferramentas de desenvolvimento são excluídos.
+O workflow autentica a publicação normal por Trusted Publishing OIDC, com `id-token: write`, repositório `jcempro/sitemath` e workflow `.github/workflows/release.yml` autorizados no NPM. `NPM_TOKEN` NÃO DEVE ser persistido como segredo do repositório. Como o vínculo OIDC exige que o pacote exista no registro, o bootstrap inicial é a única exceção: ele é publicado localmente por mantenedor autenticado, validado antes e seguido da configuração explícita do vínculo OIDC. O workflow remove o gatilho em commit `release: v<versao>` pela rotina gerenciada, preserva rastreabilidade da tag, e não reutiliza `publish` para release. O pacote NPM DEVE conter somente arquivos declarados em `package.json.files`, limitados a runtime compilado, manifesto de linguagem e declarações de tipo dentro de `dist/`, além dos metadados obrigatórios do NPM. Código-fonte, testes, fixtures, documentação do site, arquivos de ambiente, workflows, governança e ferramentas de desenvolvimento são excluídos.
 
 ## 16. FT-003 — TypeScript, documentação e entrega
 
@@ -95,3 +95,7 @@ O workflow remove o gatilho em commit `release: v<versao>` pela rotina gerenciad
 | FT-003.3 | Site de documentação renderiza sem JavaScript, contém links externos exigidos e passa validação estática. |
 | FT-003.4 | Workflow Pages é independente do workflow `release`; release só consome `release`, publica NPM antes de criar GitHub Release e valida higiene do tarball. |
 | FT-003.5 | Suíte unitária, matriz de targets, inspeção visual, `npm pack --dry-run` e validação YAML aprovam antes da conclusão. |
+
+## 17. FT-004 — Bootstrap NPM e Trusted Publishing
+
+O pacote inicial `@jcem/sitemath@0.0.1` será publicado localmente após validação integral, exclusivamente para criar o recurso no registro. Em seguida, o mantenedor configura a relação OIDC com GitHub Actions pelo repositório `jcempro/sitemath`, workflow `release.yml` e permissão de publicação. A CI passa a usar `id-token: write`, sem segredo `NPM_TOKEN`. A FT valida identidade no registro, relação confiável e inexistência de credenciais persistidas no repositório.

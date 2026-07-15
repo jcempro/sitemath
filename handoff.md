@@ -164,3 +164,57 @@ Objetivo: Migrar a implementacao SiteMath para TypeScript puro, alinhar a compil
 </tr>
 </tbody>
 </table>
+
+## FT-004 - Bootstrap NPM e Trusted Publishing
+
+Objetivo: Publicar o bootstrap inicial sem persistir token, configurar Trusted Publishing OIDC para o workflow de release e verificar o contrato remoto.
+
+<table>
+<thead><tr><th>Etapa</th><th>Tarefa</th><th>Status</th></tr></thead>
+<tbody>
+<tr>
+<td rowspan="3">Contrato e precondicoes</td>
+<td>Confirmar identidade npm e inexistencia do pacote no registro</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
+</tr>
+<tr>
+<td>Registrar a excecao de bootstrap e a configuracao OIDC no RCF e README</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
+</tr>
+<tr>
+<td>Remover NPM_TOKEN do workflow e declarar id-token: write</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
+</tr>
+<tr>
+<td rowspan="3">Validacao e versao</td>
+<td>Validar suite, tarball e YAML apos migracao</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td>Commitar e enviar a configuracao OIDC em dev</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td>Publicar localmente @jcem/sitemath@0.0.1</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td rowspan="2">Relacao confiavel</td>
+<td>Configurar npm trust github para jcempro/sitemath e release.yml</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td>Consultar o registro e a relacao configurada</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td rowspan="2">Encerramento</td>
+<td>Regenerar handoff e registrar evidencias</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+<tr>
+<td>Commitar, enviar e convergir dev para main</td>
+<td><span style="color:#64748b">&#9679;</span> pendente</td>
+</tr>
+</tbody>
+</table>
