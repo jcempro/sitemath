@@ -5,10 +5,19 @@
   "private": true,
   "license": "MPL-2.0",
   "type": "commonjs",
+  "main": "dist/sitemath.js",
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
+    "build": "node scripts/sitemath-build.js",
+    "check": "npm run lint && npm run test && npm run build",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "lint": "node --check src/sitemath.js && node --check scripts/sitemath-build.js && node --check scripts/sitemath-detect.js",
+    "test": "node --test tests/sitemath.test.js",
     "agents:update": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:agents": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:filter": "node .agents/core/runtime/scripts/to-ia.js --command agent:filter",
@@ -117,7 +126,15 @@
         "default"
       ]
     },
-    "buildAdapters": []
+    "buildAdapters": [
+      {
+        "id": "node",
+        "runtime": "node",
+        "module": "src/sitemath.js",
+        "export": "createNodeAdapter",
+        "version": 1
+      }
+    ]
   },
   "agentsGovernance": {
     "schema": 1,
