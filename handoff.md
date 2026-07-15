@@ -47,7 +47,7 @@ Objetivo: Substituir infraestrutura herdada por comandos especializados e constr
 <tr>
 <td rowspan="5">Runtime e linguagem cliente</td>
 <td>Definir parser e declaracao tipada de campos</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
 </tr>
 <tr>
 <td>Implementar limite de iteracao configuravel, async, cancelamento e Worker proporcional</td>

@@ -27,3 +27,31 @@ O identificador canônico da linguagem é `jcem.pro/sitemath`; `sitemath` é som
 ## 7. Qualidade
 
 A implementação DEVE ser modular, acessível, testável e sem dependências desnecessárias. Build e runtime DEVEM validar os mesmos marcadores canônicos. Alteração de sintaxe, manifesto, limite, eventos ou modo de execução DEVE atualizar este RCF, testes, documentação, memória e adaptadores aplicáveis no mesmo ciclo.
+
+## 8. Gramática SiteMath v0.1
+
+SiteMath usa superfície TypeScript-like, parser próprio e execução restrita; NÃO interpreta JavaScript ou TypeScript arbitrário. Espaços e quebras de linha não possuem significado sintático. Toda declaração ou instrução DEVE terminar em `;`, exceto bloco fechado por `}`. Blocos usam `{` e `}`.
+
+Declaração de campo: `field <id>: <tipo> = { <propriedades> };`. Tipos v0.1: `text`, `textarea`, `number`, `checkbox`, `radio`, `select`, `date` e `hidden`. Propriedades usam objeto TypeScript-like, com `label`, `required`, `readonly`, `placeholder`, `tip`, `options`, `min`, `max` e `value` quando aplicáveis. `label` é obrigatório, exceto em `hidden`; `placeholder` só é válido em `text` e `textarea`; `tip` é texto puro e não substitui rótulo ou erro. `radio` e `select` usam `options: [{ label: string, value: string }]`.
+
+Eventos v0.1: `on.init(() => { ... });`, `on.change([campo, ...], () => { ... });`, `on.submit((event) => { ... });` e `on.error((error) => { ... });`. Condições usam `if`/`else`; a linguagem NÃO possui `when`. `event.preventDefault()` só é válido em `on.submit`.
+
+Instruções permitidas: atribuição a campo mutável, `if`/`else`, `return`, chamada a função permitida, `for (let <id>: number = <expr>; <expr>; <incremento>) { ... }` e `for (const <id> of limit(<coleção>, <limite>)) { ... }`. Expressões aceitam literais, arrays, objetos, operadores matemáticos, comparação, booleanos, acesso a membro e funções permitidas. `import`, `new`, `eval`, acesso livre ao DOM, rede, reflexão e execução de código externo são inválidos.
+
+## 9. Runtime e estado
+
+O runtime DEVE executar ações de evento assincronamente, preservando a ordem por instância. Estado de execução é isolado por bloco; campo declarado é exposto por seu identificador e leitura de campo desconhecido falha. `notify.info`, `notify.success`, `notify.error` e `notify.debug` emitem evento estruturado e PODEM chamar notificador configurado. Funções puras iniciais: `min`, `max`, `sum` e `price`; `price` sem resolvedor configurado falha de modo explícito.
+
+Cada ação possui orçamento de iteração próprio. `limit(coleção, N)` restringe aquela iteração a `N`; o runtime também aplica `maxIterations`, cujo default é 500. Excesso interrompe somente a ação corrente, emite diagnóstico e NÃO bloqueia outros blocos. Worker é OPCIONAL para cálculo puro serializável e NÃO PODE acessar DOM; a ausência de Worker NÃO altera eventos, campos ou diagnóstico.
+
+## 10. Acessibilidade e interface
+
+Campo visível DEVE gerar `label` associado. `placeholder` é sugestão de formato; informação essencial deve residir em `label`, `tip` ou erro. `tip` DEVE ser exposto em foco, toque e apontador, por texto associado via `aria-describedby`. Erro deve usar região acessível e preserva o valor preenchido. Nenhuma propriedade textual aceita HTML executável.
+
+## 11. Detecção e adaptador Node
+
+Detector Markdown reconhece somente bloco cercado de linguagem exata `sitemath`; detector HTML reconhece somente `script[type="text/x-sitemath"]`. Ambos DEVEM validar a estrutura antes de indicar inclusão do runtime. O adaptador Node DEVE expor detecção programática para build de CMS, retornar resultado determinístico por arquivo e não executar o script durante a detecção.
+
+## 12. Distribuição
+
+Fonte reside em `src/`; artefato de biblioteca reside em `dist/`. Build local DEVE copiar somente runtime necessário, validar sintaxe e não vazar estrutura-fonte no artefato. Nenhuma dependência externa é necessária na v0.1.
