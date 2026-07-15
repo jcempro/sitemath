@@ -2,7 +2,7 @@
 
 Biblioteca em inicialização para executar a linguagem SiteMath no cliente e permitir a detecção precisa de blocos válidos durante o build de um gerenciador de conteúdo.
 
-O contrato atual está em [RCF.md](RCF.md). Ainda não há runtime, sintaxe final, dependências instaladas nem publicação remota.
+O contrato atual está em [RCF.md](RCF.md). O estado técnico em andamento está em [handoff.md](handoff.md). Ainda não há runtime, sintaxe final, dependências instaladas nem publicação remota.
 
 ## Operação local
 

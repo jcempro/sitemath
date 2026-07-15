@@ -11,13 +11,17 @@ Objetivo: Substituir infraestrutura herdada por comandos especializados e constr
 <thead><tr><th>Etapa</th><th>Tarefa</th><th>Status</th></tr></thead>
 <tbody>
 <tr>
-<td rowspan="3">Diagnostico e contratos</td>
+<td rowspan="4">Diagnostico e contratos</td>
 <td>Mapear scripts herdados, entradas, efeitos, lacunas e dependencias</td>
-<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
+</tr>
+<tr>
+<td>Migrar contexto local, handoff e referencias para a governanca v2</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Confirmar RCF, API operacional, estrutura fonte e artefato publicado</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
 </tr>
 <tr>
 <td>Definir criterios de aceite, riscos e ordem de migracao</td>
