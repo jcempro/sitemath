@@ -61,3 +61,33 @@ falhas=agent:compress concluiu e preservou o handoff, mas seu resumo retornou ac
 verificacoes_previstas=JSON e sintaxe Node; testes unitarios e integracao cliente; detector Markdown/HTML; limite de ciclos; acessibilidade; build e artefato publicado sem vazamento de src.
 pendencias=Nenhuma; extensoes de linguagem alem do RCF exigem contrato adicional.
 proximo=Convergir dev para a branch primaria somente quando houver orientacao para encerrar o ciclo global ou novo trabalho compatível.
+
+FT-002|nome=Matriz de ambientes de teste|escopo=Tecnico|prioridade=alta|status=concluida|inicio=20260714.2210.00|atualizacao=20260714.2305.00|conclusao=20260714.2305.00
+objetivo=Validar a biblioteca SiteMath em ambientes de desenvolvimento representativos de cada alvo Web Page Like, incluindo HTML estatico, Vite JS/TS, React, Preact e Jekyll.
+1/5 Contrato de compatibilidade [concluido]
+  1/3 Atualizar RCF com matriz, escopo e criterios por ambiente [concluido]
+  2/3 Declarar dependencias exclusivamente de desenvolvimento [concluido]
+  3/3 Definir paginas e resultados verificaveis por alvo [concluido]
+2/5 Fixtures Web [concluido]
+  1/4 Criar pagina HTML estatica de referencia [concluido]
+  2/4 Criar fixture Vite JavaScript e TypeScript [concluido]
+  3/4 Criar fixture Vite React e Preact [concluido]
+  4/4 Garantir artefato sem dependencia de fonte interna [concluido]
+3/5 Fixture Jekyll [concluido]
+  1/3 Criar site Jekyll de teste e pagina Markdown SiteMath [concluido]
+  2/3 Criar adaptador Ruby de deteccao condicional [concluido]
+  3/3 Validar HTML gerado e inclusao seletiva do runtime [concluido]
+4/5 Automacao [concluido]
+  1/3 Criar orquestrador deterministico da matriz [concluido]
+  2/3 Integrar comandos npm de teste por alvo [concluido]
+  3/3 Validar build, ausencia de falsos positivos e artefatos [concluido]
+5/5 Entrega [concluido]
+  1/3 Atualizar README, memoria e handoff [concluido]
+  2/3 Revisar diffs, lockfiles e dependencias de producao [concluido]
+  3/3 Commitar sem push e convergir dev para main [concluido]
+decisoes=Dependencias de Vite, TypeScript, React, Preact e plugins pertencem somente a devDependencies; Jekyll pertence a Gemfile de teste isolado. Runtime publicado continua sem dependencias.
+pendencias=Nenhuma.
+verificacoes=npm run check aprovou lint, 4 testes unitarios, build, HTML estatico, Vite JS, Vite TS, Vite React, Vite Preact e Jekyll; npm pack --dry-run confirmou pacote com somente README, dist runtime, manifesto e package. Navegador renderizou formulario estatico com label, placeholder, tip associado e campo readonly.
+falhas=No sandbox local, Bundler nao acessa as gemas instaladas sob perfil do usuario; a mesma matriz passou sob permissao elevada. Automacao visual isolada nao oferece construtor Event para disparar change; o teste DOM unitario cobre a atualizacao assincrona.
+pendencias=Nenhuma.
+proximo=Regenerar handoff, commitar FT-002 em dev e convergir para main sem push.
