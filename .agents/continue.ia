@@ -1,6 +1,6 @@
 # Memoria operacional canonica
 
-formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.2250.00
+formato=FT estruturada; fonte=AGENTS.md §7; atualizacao=20260714.2255.00
 repositorio=jcem.pro-sitemath; branch=dev; remoto=ausente; npm=nao iniciado
 governanca=AGENTS.md + .agents/core/concepts/microconceitos.md + .agents/core/contracts.md + .agents/scenarios/web/page-like/scenario.md
 estado_inicial=commit dad5caa (inicial); RCF=ausente; README=ausente; codigo_produto=ausente
@@ -25,13 +25,13 @@ falhas=agents:update --check detectou release:v0.0.3 remota que altera package.j
 pendencias=O anexo acessivel determina esta preparacao, mas nao contem a especificacao completa de sintaxe/semantica do produto; os requisitos adicionais permanecem registrados sem inventar linguagem alem dos identificadores normatizados.
 proximo=FT-001 e a continuidade tecnica vigente.
 
-FT-001|nome=Scripts especializados e bootstrap SiteMath|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260714.2222.00|atualizacao=20260714.2250.00
+FT-001|nome=Scripts especializados e bootstrap SiteMath|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260714.2222.00|atualizacao=20260714.2255.00
 objetivo=Substituir infraestrutura herdada por comandos especializados e construir de forma incremental o runtime cliente SiteMath, seus detectores e adaptadores de build verificaveis.
-1/5 Diagnostico e contratos [em andamento]
+1/5 Diagnostico e contratos [concluido]
   1/4 Mapear scripts herdados, entradas, efeitos, lacunas e dependencias [concluido]
   2/4 Migrar contexto local, handoff e referencias para a governanca v2 [concluido]
-  3/4 Confirmar RCF, API operacional, estrutura fonte e artefato publicado [em andamento]
-  4/4 Definir criterios de aceite, riscos e ordem de migracao [pendente]
+  3/4 Confirmar RCF, API operacional, estrutura fonte e artefato publicado [concluido]
+  4/4 Definir criterios de aceite, riscos e ordem de migracao [concluido]
 2/5 Infraestrutura operacional [pendente]
   1/4 Especializar por hooks/adaptadores locais, sem editar a governanca espelhada [pendente]
   2/4 Implementar comandos de build, teste, lint, contexto e documentacao aplicaveis [pendente]
@@ -53,11 +53,11 @@ objetivo=Substituir infraestrutura herdada por comandos especializados e constru
   2/4 Atualizar RCF, README, memoria e handoff [pendente]
   3/4 Revisar diffs e compatibilidade [pendente]
   4/4 Commitar em dev sem push e preparar convergencia futura [pendente]
-decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; nenhuma sintaxe alem dos marcadores de deteccao sera inventada sem especificacao confirmada. AGENTS, .agents/core, cenarios, metaarquivos e scripts de governanca sao espelhos imutaveis atualizados somente por agent:agents.
-riscos=Governanca v2 desloca scripts para .agents/core e .agents/scenarios; legado sob scripts/.agents e scripts/lib deve ser removido somente apos regenerar o contexto. Sem prompt funcional completo, a linguagem nao pode ter semantica inventada.
+decisoes=Usar identificador canonico jcem.pro/sitemath; default de 500 iteracoes por execucao; nenhuma sintaxe alem dos marcadores de deteccao sera inventada sem especificacao confirmada. AGENTS, .agents/core, cenarios, metaarquivos e scripts de governanca sao espelhos imutaveis atualizados somente por agent:agents. agents:update --check confirmou release:v0.0.6 sem alteracoes.
+riscos=Governanca v2 deslocou scripts para .agents/core e .agents/scenarios; legado foi removido no commit exclusivo c3b13c6. agent:build, agent:verify e correlatos permanecem mecanismo generico de governanca e nao constituem build do SiteMath; extensao futura deve usar adaptador local. Sem gramatica, operadores, modelo de valores e semantica de eventos, linguagem nao pode ser implementada sem inventar contrato.
 arquivos_afetados_previstos=package.json gerenciado; AGENTS.md e .agents/ gerenciados; RCF.md; README.md; agents.local.md; .agents/continue.ia; handoff.md; .agents/local/; .agents/hooks/; scripts/ locais fora da arvore gerenciada; src/; tests/; dist/; adaptadores declarados.
-verificacoes=Contexto mantido em .agents/continue.ia; handoff regenerado pela nova runtime; npm run agent:setup=SETUP_OK; sintaxe Node validada para repo-tools, update-agents e generate-agents-status; legado gerenciado ausente; commit exclusivo c3b13c6 contem somente governanca v2 e package.json gerenciado.
+verificacoes=Contexto mantido em .agents/continue.ia; handoff regenerado pela nova runtime; npm run agent:setup=SETUP_OK; sintaxe Node validada para repo-tools, update-agents e generate-agents-status; legado gerenciado ausente; commit exclusivo c3b13c6 contem somente governanca v2 e package.json gerenciado; agents:update --check=v0.0.6 atualizado; agent:doctor confirma workspace limpo e somente index.json ausente; agent:workspace confirma ausencia de src/ e dist/.
 falhas=agent:compress concluiu e preservou o handoff, mas seu resumo retornou activeFronts vazio apesar de FT-001 ativa; o handoff gerado e o parser confirmam a FT ativa. Repeticao dispensada sem evidencia nova.
 verificacoes_previstas=JSON e sintaxe Node; testes unitarios e integracao cliente; detector Markdown/HTML; limite de ciclos; acessibilidade; build e artefato publicado sem vazamento de src.
-pendencias=Confirmar a especificacao funcional completa da linguagem caso ela nao esteja em anexo acessivel; concluir a migracao v2 e o commit exclusivo da governanca antes de implementar a FT-001.
-proximo=Confirmar o contrato RCF, a API operacional disponivel, as raizes src/dist e os criterios de aceite antes de criar qualquer codigo local.
+pendencias=Fornecer ou anexar gramatica, operadores, precedencia, modelo de valores, semantica de erro, nomes de eventos e formato de configuracao da linguagem SiteMath; sem esses contratos a etapa 2 nao deve criar codigo local.
+proximo=Ao receber a especificacao funcional, declarar src/ e dist/ no RCF, criar adaptador local de build/teste e iniciar parser tipado sem alterar a governanca gerenciada.

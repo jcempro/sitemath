@@ -21,11 +21,11 @@ Objetivo: Substituir infraestrutura herdada por comandos especializados e constr
 </tr>
 <tr>
 <td>Confirmar RCF, API operacional, estrutura fonte e artefato publicado</td>
-<td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td>Definir criterios de aceite, riscos e ordem de migracao</td>
-<td><span style="color:#64748b">&#9679;</span> pendente</td>
+<td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
 <td rowspan="4">Infraestrutura operacional</td>
