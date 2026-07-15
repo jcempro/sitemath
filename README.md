@@ -38,11 +38,11 @@ field aceite: checkbox = { label: "Aceito os termos", required: true };
 on.change([nome], () => { if (nome != "") { notify.info(nome); } });
 ```
 
-Para integração de build, `require("@jcem/sitemath").createNodeAdapter()` expõe os detectores Markdown e HTML sem executar o script encontrado. O pacote inclui `dist/sitemath.d.ts` para consumo tipado.
+Para integração de build, `require("@jeancarloem/sitemath").createNodeAdapter()` expõe os detectores Markdown e HTML sem executar o script encontrado. O pacote inclui `dist/sitemath.d.ts` para consumo tipado.
 
 ## Documentação pública
 
-A versão Web do README e da API está em `docs/index.html`. Ela contém os links diretos para o [repositório GitHub](https://github.com/jcempro/sitemath), [site do autor](https://jeancarloem.com) e [pacote no NPM](https://www.npmjs.com/package/@jcem/sitemath). O workflow `pages.yml` publica somente esse site estático em `main`; ele não participa do ciclo de release.
+A versão Web do README e da API está em `docs/index.html`. Ela contém os links diretos para o [repositório GitHub](https://github.com/jcempro/sitemath), [site do autor](https://jeancarloem.com) e [pacote no NPM](https://www.npmjs.com/package/@jeancarloem/sitemath). O workflow `pages.yml` publica somente esse site estático em `main`; ele não participa do ciclo de release.
 
 ## Baseline de navegador
 

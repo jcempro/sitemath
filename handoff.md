@@ -195,7 +195,7 @@ Objetivo: Publicar o bootstrap inicial sem persistir token ou OTP, configurar Tr
 <td><span style="color:#15803d">&#9679;</span> concluído</td>
 </tr>
 <tr>
-<td>Publicar localmente @jcem/sitemath@0.0.1</td>
+<td>Publicar localmente @jeancarloem/sitemath@0.0.1</td>
 <td><span style="color:#ca8a04">&#9679;</span> em andamento</td>
 </tr>
 <tr>

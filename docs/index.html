@@ -42,11 +42,11 @@ on.change([quantidade], () =&gt; { total = quantidade * 12; });
   maxIterations: 500,
   onNotify: ({ level, message }) =&gt; console.info(level, message)
 });</code></pre><div><p class="eyebrow">Segurança por construção</p><h2>Sem <code>eval</code>, sem rede, sem acesso livre ao DOM.</h2><p>Cada ação é enfileirada por instância e possui orçamento próprio de iterações. Exceder o limite interrompe apenas a ação atual e produz diagnóstico estruturado.</p></div></section>
-    <section id="integracao" class="section panel"><p class="eyebrow">Integração de build</p><h2>Inclua o runtime apenas onde ele é necessário.</h2><p>O adaptador Node examina HTML ou Markdown sem executar os blocos. Ele aceita somente os identificadores canônicos e a estrutura sintaticamente válida.</p><pre><code>const adapter = require("@jcem/sitemath").createNodeAdapter();
+    <section id="integracao" class="section panel"><p class="eyebrow">Integração de build</p><h2>Inclua o runtime apenas onde ele é necessário.</h2><p>O adaptador Node examina HTML ou Markdown sem executar os blocos. Ele aceita somente os identificadores canônicos e a estrutura sintaticamente válida.</p><pre><code>const adapter = require("@jeancarloem/sitemath").createNodeAdapter();
 const result = adapter.detectMarkdown(markdown);
 if (result.valid &gt; 0) includeRuntime();</code></pre></section>
     <section class="section commands"><p class="eyebrow">Desenvolvimento</p><h2>Verificações locais.</h2><dl><dt><code>npm run check</code></dt><dd>Typecheck, unidade, build e matriz de targets.</dd><dt><code>npm run test:targets</code></dt><dd>HTML estático, Vite JS/TS, React, Preact e Jekyll.</dd><dt><code>npm run release:publish 1.2.3</code></dt><dd>Prepara e envia o gatilho único de release.</dd></dl></section>
   </main>
-  <footer><p>SiteMath é licenciado sob MPL-2.0.</p><nav aria-label="Links institucionais"><a href="https://github.com/jcempro/sitemath">GitHub</a><a href="https://jeancarloem.com">Autor</a><a href="https://www.npmjs.com/package/@jcem/sitemath">Pacote NPM</a></nav></footer>
+  <footer><p>SiteMath é licenciado sob MPL-2.0.</p><nav aria-label="Links institucionais"><a href="https://github.com/jcempro/sitemath">GitHub</a><a href="https://jeancarloem.com">Autor</a><a href="https://www.npmjs.com/package/@jeancarloem/sitemath">Pacote NPM</a></nav></footer>
 </body>
 </html>
