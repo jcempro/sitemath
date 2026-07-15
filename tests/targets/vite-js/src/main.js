@@ -1,0 +1,1 @@
+window.SiteMath.mount(document);

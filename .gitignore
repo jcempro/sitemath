@@ -1,4 +1,9 @@
 node_modules/
 dist/
 coverage/
+.tmp/
+tests/targets/**/dist/
+tests/targets/**/public/sitemath.js
+tests/targets/jekyll/assets/sitemath.js
+tests/targets/jekyll/_site/
 .agents/cache/

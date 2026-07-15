@@ -2,7 +2,7 @@
 
 ## 1. Escopo e precedência
 
-Este RCF define o produto SiteMath; `AGENTS.md` define o processo da IA. O produto é uma linguagem declarativa embutível em conteúdo gerenciado, com runtime obrigatório no navegador e integração opcional de detecção no build. Código, sintaxe completa e adaptadores ainda não existem; nenhuma semântica não registrada deve ser inferida.
+Este RCF define o produto SiteMath; `AGENTS.md` define o processo da IA. O produto é uma linguagem declarativa embutível em conteúdo gerenciado, com runtime obrigatório no navegador e integração opcional de detecção no build. Código, sintaxe e adaptador Node v0.1 existem; extensão semântica não registrada não deve ser inferida.
 
 ## 2. Execução cliente
 
@@ -54,4 +54,10 @@ Detector Markdown reconhece somente bloco cercado de linguagem exata `sitemath`;
 
 ## 12. Distribuição
 
-Fonte reside em `src/`; artefato de biblioteca reside em `dist/`. Build local DEVE copiar somente runtime necessário, validar sintaxe e não vazar estrutura-fonte no artefato. Nenhuma dependência externa é necessária na v0.1.
+Fonte reside em `src/`; artefato de biblioteca reside em `dist/`. Build local DEVE copiar somente runtime necessário, validar sintaxe e não vazar estrutura-fonte no artefato. O runtime v0.1 não possui dependência externa; ferramentas de desenvolvimento não integram a distribuição.
+
+## 13. Matriz de ambientes de teste
+
+Cada alvo suportado DEVE possuir fixture de desenvolvimento verificável. A matriz mínima é: HTML estático JavaScript; Vite JavaScript; Vite TypeScript; Vite React; Vite Preact; e Jekyll com Markdown. Vite, TypeScript, React, Preact e plugins pertencem exclusivamente a `devDependencies` do repositório; Jekyll e plugins Ruby pertencem somente ao `Gemfile` da fixture. Nenhuma fixture, ferramenta ou dependência de teste integra o pacote publicado.
+
+Toda fixture DEVE conter página que declara SiteMath e página sem declaração. A validação DEVE comprovar build do ambiente, detecção exata, inclusão do runtime somente na página declarada, ausência de falso positivo e funcionamento do artefato `dist/` sem importação de `src/`. A matriz PODE reutilizar arquétipos de fixture quando variar somente CSS, SCSS, WASM ou configuração de bundler, desde que o orquestrador registre cada perfil coberto e o ambiente representativo seja executado.

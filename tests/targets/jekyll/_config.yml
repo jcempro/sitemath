@@ -1,0 +1,4 @@
+title: SiteMath Jekyll Fixture
+exclude:
+  - Gemfile
+  - Gemfile.lock

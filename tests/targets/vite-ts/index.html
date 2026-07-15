@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath — Vite TypeScript</title>
+<body>
+  <main><h1>Vite TypeScript</h1></main>
+  <script src="/sitemath.js"></script>
+  <script type="text/x-sitemath">
+field email: text = { label: "E-mail", placeholder: "nome@exemplo.test", tip: "Fixture Vite TS" };
+field total: number = { label: "Total", readonly: true };
+on.change([email], () => { if (email != "") { total = 2; } });
+  </script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

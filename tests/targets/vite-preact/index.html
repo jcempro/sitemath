@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath — Vite Preact</title>
+<body>
+  <div id="root"></div>
+  <script src="/sitemath.js"></script>
+  <script type="text/x-sitemath">
+field cidade: text = { label: "Cidade", placeholder: "Informe a cidade", tip: "Fixture Preact" };
+field total: number = { label: "Total", readonly: true };
+on.change([cidade], () => { if (cidade != "") { total = 4; } });
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

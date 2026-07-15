@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath — HTML estático</title>
+<body>
+  <main><h1>HTML estático com SiteMath</h1></main>
+  <script src="../../../dist/sitemath.js"></script>
+  <script type="text/x-sitemath">
+field nome: text = { label: "Nome", placeholder: "Informe o nome", tip: "Texto de teste" };
+field quantidade: number = { label: "Quantidade", value: 1 };
+field total: number = { label: "Total", readonly: true };
+on.change([quantidade], () => { total = quantidade * 2; });
+  </script>
+  <script>SiteMath.mount(document);</script>
+</body>
+</html>

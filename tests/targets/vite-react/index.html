@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath — Vite React</title>
+<body>
+  <div id="root"></div>
+  <script src="/sitemath.js"></script>
+  <script type="text/x-sitemath">
+field produto: text = { label: "Produto", placeholder: "Nome do produto", tip: "Fixture React" };
+field total: number = { label: "Total", readonly: true };
+on.change([produto], () => { if (produto != "") { total = 3; } });
+  </script>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

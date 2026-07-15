@@ -14,11 +14,14 @@
   },
   "scripts": {
     "build": "node scripts/sitemath-build.js",
-    "check": "npm run lint && npm run test && npm run build",
+    "check": "npm run lint && npm run test && npm run build && npm run test:targets",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "dev": "node scripts/sitemath-serve.js",
-    "lint": "node --check src/sitemath.js && node --check scripts/sitemath-build.js && node --check scripts/sitemath-detect.js",
+    "lint": "node --check src/sitemath.js && node --check scripts/sitemath-build.js && node --check scripts/sitemath-detect.js && node --check scripts/test-targets.js",
     "test": "node --test tests/sitemath.test.js",
+    "test:targets": "node scripts/test-targets.js",
+    "test:targets:web": "node scripts/test-targets.js --web",
+    "test:targets:jekyll": "node scripts/test-targets.js --jekyll",
     "agents:update": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:agents": "node .agents/core/runtime/scripts/repo-tools.js agent:agents",
     "agent:filter": "node .agents/core/runtime/scripts/to-ia.js --command agent:filter",
@@ -147,5 +150,14 @@
     ],
     "dependencies": [],
     "optionalDependencies": []
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.5",
+    "@vitejs/plugin-react": "^5.2.0",
+    "preact": "^10.29.7",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "typescript": "^7.0.2",
+    "vite": "^6.4.3"
   }
 }

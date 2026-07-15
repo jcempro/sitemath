@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>SiteMath — Vite JavaScript</title>
+<body>
+  <main><h1>Vite JavaScript</h1></main>
+  <script src="/sitemath.js"></script>
+  <script type="text/x-sitemath">
+field nome: text = { label: "Nome", placeholder: "Informe o nome", tip: "Fixture Vite JS" };
+field total: number = { label: "Total", readonly: true };
+on.change([nome], () => { if (nome != "") { total = 1; } });
+  </script>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

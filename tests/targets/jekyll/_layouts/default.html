@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>{{ page.title }}</title>
+<body>
+  <main>{{ content }}</main>
+  {% if page.sitemath_source %}
+  <script src="{{ '/assets/sitemath.js' | relative_url }}"></script>
+  <script type="text/x-sitemath">{{ page.sitemath_source | escape }}</script>
+  <script>SiteMath.mount(document);</script>
+  {% endif %}
+</body>
+</html>
