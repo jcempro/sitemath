@@ -164,9 +164,9 @@ objetivo=Auditar a integracao local entre hooks de release, publicacao NPM, GitH
 5/5 Encerramento [concluido]
   1/3 Registrar issue, hash, verificacoes e resultado na memoria [concluido]
   2/3 Regenerar handoff e revisar diff [concluido]
-  3/3 Commitar em dev e convergir branches conforme governanca [em andamento]
+  3/3 Commitar em dev e convergir branches conforme governanca [concluido]
 decisoes=O checkout e consumidor; o destino jcempro/agents.md foi explicitamente indicado pelo solicitante. A proposta trata registro de pacote como capacidade opcional do cenario Release e preserva agent:publish exclusivamente para conteudo. Links usam commit imutavel 8e7bbc2 e nenhum segredo.
 verificacoes=Worktree inicial limpo; main estava um commit a frente de dev; fast-forward aplicado; busca remota nao encontrou issue equivalente; agent:test:upstream=UPSTREAM_SELF_TEST_OK; proposta=PROPOSAL_OK com 6207 bytes, 8 secoes, 5 links e sem valor de credencial; avaliacao=highly_recommended; issue 1 reaberta pela API com titulo, corpo, tres anexos embutidos e quatro referencias permanentes integros.
 falhas=agent:upstream:check inicialmente retornou papel e upstream nao resolvidos porque a configuracao local ainda nao existia; gh dentro do sandbox nao acessou a configuracao autenticada. agent:upstream:prepare corrompeu URLs e barras legitimas como PATH_REDACTED, portanto o derivado foi descartado. agent:upstream:publish bloqueou antes de mutacao por requireAuthorization ausente; publicacao ocorreu pelo gh autenticado usando exatamente issueBody da proposta validada. O nucleo gerenciado permaneceu inalterado.
-pendencias=Segundo commit, push de dev e convergencia de main; tarefas executadas no encerramento transacional.
-proximo=Enviar dev, avancar main por fast-forward e comprovar convergencia remota.
+pendencias=Nenhuma.
+proximo=Nenhum; issue upstream publicada e FT-005 concluida.
