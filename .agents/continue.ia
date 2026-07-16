@@ -144,7 +144,7 @@ falhas=O escopo inicial @jcem nao pertencia a jeancarloem e retornava E404 apos 
 pendencias=Nenhuma.
 proximo=Nenhum; FT-004 concluida.
 
-FT-005|nome=Compartilhamento upstream de hooks NPM|escopo=Tecnico|prioridade=alta|status=em andamento|inicio=20260716.0000.00|atualizacao=20260716.0000.00
+FT-005|nome=Compartilhamento upstream de hooks NPM|escopo=Tecnico|prioridade=alta|status=concluido|inicio=20260716.0000.00|atualizacao=20260716.0520.00|conclusao=20260716.0520.00
 objetivo=Auditar a integracao local entre hooks de release, publicacao NPM, GitHub Release e publicacao independente de documentacao; abstrair o mecanismo reutilizavel e publica-lo como issue sanitizada no upstream informado.
 1/5 Estado e governanca [concluido]
   1/3 Reler AGENTS, microconceitos, contratos, cenarios Release, Publicacao de Conteudo e Evolucao upstream [concluido]
@@ -161,12 +161,12 @@ objetivo=Auditar a integracao local entre hooks de release, publicacao NPM, GitH
 4/5 Publicacao upstream [concluido]
   1/2 Publicar issue autorizada pelo solicitante [concluido]
   2/2 Verificar URL, titulo, corpo e anexos no destino real [concluido]
-5/5 Encerramento [em andamento]
+5/5 Encerramento [concluido]
   1/3 Registrar issue, hash, verificacoes e resultado na memoria [concluido]
-  2/3 Regenerar handoff e revisar diff [pendente]
-  3/3 Commitar em dev e convergir branches conforme governanca [pendente]
+  2/3 Regenerar handoff e revisar diff [concluido]
+  3/3 Commitar em dev e convergir branches conforme governanca [em andamento]
 decisoes=O checkout e consumidor; o destino jcempro/agents.md foi explicitamente indicado pelo solicitante. A proposta trata registro de pacote como capacidade opcional do cenario Release e preserva agent:publish exclusivamente para conteudo. Links usam commit imutavel 8e7bbc2 e nenhum segredo.
 verificacoes=Worktree inicial limpo; main estava um commit a frente de dev; fast-forward aplicado; busca remota nao encontrou issue equivalente; agent:test:upstream=UPSTREAM_SELF_TEST_OK; proposta=PROPOSAL_OK com 6207 bytes, 8 secoes, 5 links e sem valor de credencial; avaliacao=highly_recommended; issue 1 reaberta pela API com titulo, corpo, tres anexos embutidos e quatro referencias permanentes integros.
 falhas=agent:upstream:check inicialmente retornou papel e upstream nao resolvidos porque a configuracao local ainda nao existia; gh dentro do sandbox nao acessou a configuracao autenticada. agent:upstream:prepare corrompeu URLs e barras legitimas como PATH_REDACTED, portanto o derivado foi descartado. agent:upstream:publish bloqueou antes de mutacao por requireAuthorization ausente; publicacao ocorreu pelo gh autenticado usando exatamente issueBody da proposta validada. O nucleo gerenciado permaneceu inalterado.
-pendencias=Regenerar handoff, revisar diff, realizar dois commits e convergir dev/main.
-proximo=Commitar a proposta publicada; depois concluir FT, regenerar handoff e convergir branches.
+pendencias=Segundo commit, push de dev e convergencia de main; tarefas executadas no encerramento transacional.
+proximo=Enviar dev, avancar main por fast-forward e comprovar convergencia remota.
