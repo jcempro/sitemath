@@ -16,9 +16,6 @@ const { extractZip } = require("./archive");
 const { FORMAT, MARKER, VERSION, convertLegacyLock, isCurrentLock } = require("../../update/migrations/v1-to-v2");
 
 const ROOT_DIR = path.resolve(__dirname, "..", "..", "..", "..");
-const SOURCE_OWNER = "JeanCarloEM";
-const SOURCE_REPO = "agents.md";
-const SOURCE_API = `https://api.github.com/repos/${SOURCE_OWNER}/${SOURCE_REPO}`;
 const LOCK_FILE = path.join(".agents", "agents-update.lock.json");
 const MANAGED_EXTENSIONS = new Set([".js", ".json", ".md"]);
 const PACKAGE_RELATIVE_PATH = "package.json";
@@ -94,7 +91,7 @@ function help() {
 }
 
 async function buildUpdatePlan(rootDir, httpClient = defaultHttpClient) {
-  const source = await resolveRemoteSource(httpClient);
+  const source = await resolveRemoteSource(httpClient, rootDir);
   const archive = await httpClient(source.archiveUrl, { binary: true });
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "agents-update-"));
 
@@ -117,8 +114,10 @@ async function buildUpdatePlan(rootDir, httpClient = defaultHttpClient) {
   }
 }
 
-async function resolveRemoteSource(httpClient = defaultHttpClient) {
-  const latest = await requestJsonAllow404(httpClient, `${SOURCE_API}/releases/latest`);
+async function resolveRemoteSource(httpClient = defaultHttpClient, rootDir = ROOT_DIR) {
+  const source = resolveConfiguredUpstream(rootDir);
+  const sourceApi = `https://api.github.com/repos/${source.repository}`;
+  const latest = await requestJsonAllow404(httpClient, `${sourceApi}/releases/latest`);
 
   if (latest && latest.statusCode !== 404) {
     const asset = selectReleaseZipAsset(latest.json);
@@ -131,7 +130,7 @@ async function resolveRemoteSource(httpClient = defaultHttpClient) {
   }
 
   for (const branch of ["main", "master"]) {
-    const response = await requestJsonAllow404(httpClient, `${SOURCE_API}/branches/${branch}`);
+    const response = await requestJsonAllow404(httpClient, `${sourceApi}/branches/${branch}`);
 
     if (response && response.statusCode !== 404) {
       const sha = response.json && response.json.commit && response.json.commit.sha;
@@ -141,7 +140,7 @@ async function resolveRemoteSource(httpClient = defaultHttpClient) {
       }
 
       return {
-        archiveUrl: `${SOURCE_API}/zipball/${sha}`,
+        archiveUrl: `${sourceApi}/zipball/${sha}`,
         label: `branch:${branch}:${sha}`,
         ref: sha,
         type: "branch",
@@ -149,7 +148,20 @@ async function resolveRemoteSource(httpClient = defaultHttpClient) {
     }
   }
 
-  throw new Error("Nenhuma release latest ou branch main/master encontrada para AGENTS.");
+  throw new Error(`Nenhuma release latest ou branch main/master encontrada para AGENTS em ${source.repository}.`);
+}
+
+function resolveConfiguredUpstream(rootDir) {
+  const packagePath = path.join(rootDir, "package.json");
+  const localPath = path.join(rootDir, ".agents", "upstream.json");
+  const packageConfig = fs.existsSync(packagePath) ? JSON.parse(fs.readFileSync(packagePath, "utf8")).agentsUpstream || {} : {};
+  const localConfig = fs.existsSync(localPath) ? JSON.parse(fs.readFileSync(localPath, "utf8")) : {};
+  const config = { ...packageConfig, ...localConfig };
+  const repository = String(config.upstreamRepository || "").trim();
+  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/u.test(repository)) {
+    throw new Error("UPSTREAM_AGENTS_NAO_RESOLVIDO: configure agentsUpstream.upstreamRepository.");
+  }
+  return { repository, source: localConfig.upstreamRepository ? "local" : "package" };
 }
 
 async function requestJsonAllow404(httpClient, url) {

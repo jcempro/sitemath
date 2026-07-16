@@ -23,16 +23,6 @@ const RELEASE_NOTE_PATH = path.join(DIST_DIR, "release-note.txt");
 const PACKAGE_PATH = path.join(ROOT_DIR, "package.json");
 const DISTRIBUTION_PACKAGE_PATH = path.join(DIST_DIR, "package.json");
 const UPDATE_FORMAT_PATH = path.join(ROOT_DIR, ".agents", "core", "update", "formats", "governance-manifest.v2.json");
-const NORMATIVE_MIRRORS = [
-  "AGENTS.md",
-  path.join(".agents", "core", "contracts.md"),
-  path.join(".agents", "core", "update", "scenario.md"),
-  path.join(".agents", "core", "update", "formats", "governance-manifest.v2.json"),
-  path.join(".agents", "core", "concepts", "microconceitos.md"),
-  path.join(".agents", "scenarios", "content-publication", "scenario.md"),
-  path.join(".agents", "scenarios", "release", "scenario.md"),
-  path.join(".agents", "scenarios", "web", "page-like", "scenario.md"),
-];
 const ALIEN_SCRIPT_TERMS = [
   "What" + "Send",
   "what" + "sender",
@@ -110,6 +100,66 @@ const COMMANDS = {
     run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "update-agents.js"), _args),
     status: "available",
   },
+  "agent:upstream:check": {
+    description: "resolve e consulta o upstream de AGENTS.md com seguranca",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["check", ..._args]),
+    status: "available",
+  },
+  "agent:upstream:prepare": {
+    description: "sanitiza e prepara proposta upstream revisavel",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["prepare", ..._args]),
+    status: "available",
+  },
+  "agent:upstream:publish": {
+    description: "publica proposta upstream somente com autorizacao explicita",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["publish", ..._args]),
+    status: "available",
+  },
+  "agent:upstream:assess": {
+    description: "classifica proposta para decisao manual do mantenedor",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["assess", ..._args]),
+    status: "available",
+  },
+  "agent:upstream:apply-assessment": {
+    description: "aplica rotulo e comentario de avaliacao somente com autorizacao",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["apply-assessment", ..._args]),
+    status: "available",
+  },
+  "agent:test:upstream": {
+    description: "executa verificacao local do pipeline upstream",
+    run: () => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "upstream-share.js"), ["self-test"]),
+    status: "available",
+  },
+  "agent:inbox:event": {
+    description: "sanitiza e indexa evento de issue no construtor",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["event", ..._args]),
+    status: "available",
+  },
+  "agent:inbox:fetch": {
+    description: "busca e indexa issue para avaliacao construtora",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["fetch", ..._args]),
+    status: "available",
+  },
+  "agent:inbox:evaluate": {
+    description: "avalia item sanitizado da inbox sem efeito remoto",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["evaluate", ..._args]),
+    status: "available",
+  },
+  "agent:inbox:process": {
+    description: "processa evento da inbox e exige autorizacao para efeito remoto",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["process", ..._args]),
+    status: "available",
+  },
+  "agent:inbox:apply": {
+    description: "aplica efeito da avaliacao construtora somente com autorizacao",
+    run: (_args) => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["apply", ..._args]),
+    status: "available",
+  },
+  "agent:test:inbox": {
+    description: "executa verificacao local da inbox construtora",
+    run: () => runNodeScript(path.join(".agents", "core", "runtime", "scripts", "issue-inbox.js"), ["self-test"]),
+    status: "available",
+  },
 };
 
 Object.assign(COMMANDS, {
@@ -164,8 +214,8 @@ Object.assign(COMMANDS, {
     status: "available",
   },
   "agent:test": {
-    description: "alias seguro de agent:verify",
-    run: () => COMMANDS["agent:verify"].run(),
+    description: "executa verificacao e testes locais da governanca",
+    run: testAll,
     status: "available",
   },
   "agent:lint": {
@@ -279,6 +329,7 @@ const CANONICAL_COMMANDS = [
   "agent:test", "agent:lint", "agent:format", "agent:typecheck", "agent:benchmark", "agent:security", "agent:analyze",
   "agent:deps", "agent:update-deps", "agent:licenses",
   "agent:index", "agent:map", "agent:handoff", "agent:docs", "agent:rcf", "agent:agents",
+  "agent:upstream:check", "agent:upstream:prepare", "agent:upstream:publish", "agent:upstream:assess", "agent:upstream:apply-assessment", "agent:test:upstream", "agent:inbox:event", "agent:inbox:fetch", "agent:inbox:evaluate", "agent:inbox:process", "agent:inbox:apply", "agent:test:inbox",
   "agent:parse-data", "agent:summarize", "agent:convert", "agent:validate-data", "agent:index-data", "agent:query-data",
 ];
 
@@ -430,6 +481,7 @@ function buildDistributionPackage() {
     license: source.license || "MPL-2.0",
     description: source.description || "Governanca operacional portavel para agentes IA.",
     main: source.main || "AGENTS.md",
+    ...(source.agentsUpstream ? { agentsUpstream: source.agentsUpstream } : {}),
     scripts,
     ...(Object.keys(dependencies).length ? { dependencies } : {}),
     ...(Object.keys(optionalDependencies).length ? { optionalDependencies } : {}),
@@ -467,7 +519,6 @@ function readExistingReleaseMetadata() {
 }
 
 function verify() {
-  assertNormativeMirrors();
   const checks = [];
   for (const script of listFiles(path.join(ROOT_DIR, ".agents")).filter((filePath) => path.extname(filePath) === ".js" && isManagedScriptPath(filePath))) {
     const content = fs.readFileSync(script, "utf8");
@@ -481,9 +532,18 @@ function verify() {
   const index = buildIndex();
   writeJsonMinified(INDEX_PATH, index);
   validateIndex(index);
+  validateNormativeReferences(index);
   buildDist();
+  assertPublishedNorms(index);
 
   return ok("VERIFY_OK", { scripts: checks.length, indexedFiles: index.files.length });
+}
+
+function testAll() {
+  verify();
+  runProcess(process.execPath, [path.join(ROOT_DIR, "test", "upstream-share.test.js")]);
+  runProcess(process.execPath, [path.join(ROOT_DIR, "test", "issue-inbox.test.js")]);
+  return ok("TEST_OK", { suites: 2 });
 }
 
 function validateIndex(index) {
@@ -498,14 +558,63 @@ function validateIndex(index) {
   validateGovernanceManifest(index.update, "index.json");
 }
 
+function validateNormativeReferences(index) {
+  const conceptPath = path.join(SRC_DIR, ".agents", "core", "concepts", "microconceitos.md");
+  const conceptText = fs.readFileSync(conceptPath, "utf8");
+  const definitions = new Set();
+  for (const match of conceptText.matchAll(/^## (MN-[A-Z0-9-]+|W-MTX-42)\b/gmu)) {
+    if (definitions.has(match[1])) {
+      throw new Error(`Microconceito duplicado: ${match[1]}.`);
+    }
+    definitions.add(match[1]);
+  }
+
+  for (const entry of index.files.filter((file) => path.extname(file.path) === ".md")) {
+    const filePath = path.join(ROOT_DIR, entry.path);
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const match of content.matchAll(/\b(MN-[A-Z0-9-]+|W-MTX-42)\b/gu)) {
+      if (!definitions.has(match[1])) {
+        throw new Error(`Microconceito indefinido em ${entry.path}: ${match[1]}.`);
+      }
+    }
+    for (const match of content.matchAll(/`((?:\.\.\/|\.\/)[^`\r\n]*?\.md)(?:#[^`\s]*)?`/gu)) {
+      const reference = match[1];
+      if (reference.includes("<") || reference.includes(">")) {
+        continue;
+      }
+      const fromRoot = reference === "./AGENTS.md" || reference.startsWith("./.agents/");
+      const target = path.resolve(fromRoot ? SRC_DIR : path.dirname(filePath), reference);
+      const relative = path.relative(SRC_DIR, target);
+      if (!relative || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative) || !fs.existsSync(target) || !hasExactPathCase(SRC_DIR, relative)) {
+        throw new Error(`Referencia normativa invalida em ${entry.path}: ${reference}.`);
+      }
+    }
+  }
+}
+
+function hasExactPathCase(root, relativePath) {
+  let current = root;
+  for (const segment of relativePath.split(path.sep)) {
+    if (!fs.readdirSync(current).includes(segment)) {
+      return false;
+    }
+    current = path.join(current, segment);
+  }
+  return true;
+}
+
 function validateDist() {
   assertFile(path.join(DIST_DIR, "AGENTS.md"), "dist/AGENTS.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "core", "contracts.md"), "dist/.agents/core/contracts.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "core", "update", "scenario.md"), "dist/.agents/core/update/scenario.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "core", "concepts", "microconceitos.md"), "dist/.agents/core/concepts/microconceitos.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "scenarios", "content-publication", "scenario.md"), "dist/.agents/scenarios/content-publication/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "scenarios", "governance", "upstream-sharing", "scenario.md"), "dist/.agents/scenarios/governance/upstream-sharing/scenario.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "scenarios", "release", "scenario.md"), "dist/.agents/scenarios/release/scenario.md ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "scenarios", "web", "page-like", "scenario.md"), "dist/.agents/scenarios/web/page-like/scenario.md ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "runtime", "scripts", "public-client.js"), "dist/.agents/core/runtime/scripts/public-client.js ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "runtime", "scripts", "issue-inbox.js"), "dist/.agents/core/runtime/scripts/issue-inbox.js ausente.");
+  assertFile(path.join(DIST_DIR, ".agents", "core", "runtime", "scripts", "upstream-share.js"), "dist/.agents/core/runtime/scripts/upstream-share.js ausente.");
   assertFile(path.join(DIST_DIR, ".agents", "scenarios", "release", "scripts", "release-hooks.js"), "dist/.agents/scenarios/release/scripts/release-hooks.js ausente.");
   assertFile(DISTRIBUTION_PACKAGE_PATH, "dist/package.json ausente.");
   assertFile(RELEASE_PATH, "dist/release.json ausente.");
@@ -1042,14 +1151,15 @@ function compactOperationalContext() {
   return ok("COMPACT_OK", { activeFronts, canonical: ".agents/continue.ia", projection: "handoff.md" });
 }
 
-function assertNormativeMirrors() {
-  for (const relativePath of NORMATIVE_MIRRORS) {
-    const activePath = path.join(ROOT_DIR, relativePath);
-    const sourcePath = path.join(SRC_DIR, relativePath);
-    assertFile(activePath, `Norma ativa ausente: ${toPosix(relativePath)}.`);
-    assertFile(sourcePath, `Fonte normativa ausente: ${toPosix(path.join("src", relativePath))}.`);
-    if (!fs.readFileSync(activePath).equals(fs.readFileSync(sourcePath))) {
-      throw new Error(`Paridade normativa divergente: ${toPosix(relativePath)} vs ${toPosix(path.join("src", relativePath))}.`);
+function assertPublishedNorms(index) {
+  // FIX-BUG: valida produto fonte/publicado sem contaminar a governanca ativa.
+  for (const file of index.files) {
+    const sourcePath = path.join(ROOT_DIR, file.path);
+    const publishedPath = path.join(DIST_DIR, releaseRelativePath(file.path));
+    assertFile(sourcePath, `Fonte normativa ausente: ${toPosix(file.path)}.`);
+    assertFile(publishedPath, `Norma publicada ausente: ${toPosix(path.relative(ROOT_DIR, publishedPath))}.`);
+    if (!fs.readFileSync(sourcePath).equals(fs.readFileSync(publishedPath))) {
+      throw new Error(`Paridade fonte/publicado divergente: ${toPosix(file.path)}.`);
     }
   }
 }
