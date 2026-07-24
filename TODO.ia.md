@@ -1047,7 +1047,7 @@
     - Exigir declaração de:
       - capacidades sensíveis;
       - acesso a DOM;
-      - rede;
+      - rede ou ajax/fetchs;
       - armazenamento;
       - sistema de arquivos;
       - processos;
@@ -1103,7 +1103,7 @@
   - **Manutenção e sincronização normativa contínuas**
     - A norma de integração DEVE ser tratada como projeção especializada e
       subordinada do RCF da DSL, e não como documento estático ou independente
-      de sua evolução.
+      de sua evolução e DEVE considerar o versionamento de schemas, releases do DSL, manifestos e outros.
     - Toda alteração no RCF, na implementação ou nos contratos públicos da DSL
       DEVE incluir análise explícita de impacto sobre essa norma.
     - A análise DEVE verificar, conforme aplicável:
@@ -1317,7 +1317,7 @@
     - Considerar a criação inicial concluída somente quando:
       - o suporte de extensibilidade anterior estiver finalizado e estável;
       - o documento normativo possuir nome definitivo;
-      - o RCF mencionar e vincular diretamente a norma;
+      - o RCF nromatizar este TO-DO, mencionar e vincular diretamente a norma;
       - o `README.md` mencionar e vincular diretamente a norma;
       - os links forem válidos, estáveis e verificáveis;
       - a norma refletir exatamente os contratos implementados;
@@ -1327,7 +1327,7 @@
       - manifestos, tipos, adaptadores, hooks e extensões globais estiverem
         integralmente cobertos;
       - carregamento, descoberta, registro e vinculação estiverem normatizados;
-      - segurança, erros, versionamento e compatibilidade estiverem cobertos;
+      - segurança, erros, warns, versionamento e compatibilidade estiverem cobertos;
       - schemas e modelos necessários estiverem disponíveis;
       - houver exemplos conformes e não conformes;
       - houver checklist e relatório padrão;
