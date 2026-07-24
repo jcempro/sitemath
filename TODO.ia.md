@@ -431,3 +431,918 @@
       - ferramentas de build não vazam para o runtime cliente;
       - bibliotecas externas podem expor recursos customizados e estender a pseudo-linguagem sem impor exigências ao núcleo;
       - a solução reutiliza padrões existentes e acrescenta somente adaptações cirúrgicas indispensáveis.
+
+- [ ] **Criar, somente após a conclusão integral do suporte a extensões e
+  dependências externas da DSL, uma norma técnica autônoma para orientar
+  bibliotecas externas e suas IAs na produção de integrações conformes**,
+  mantendo-a continuamente revisada, sincronizada e atualizada conforme a
+  evolução do RCF da DSL, sem contrariar, negar, enfraquecer ou romper as regras
+  de negócio, a arquitetura, os contratos, a segurança, a compatibilidade ou as
+  decisões normativas da própria biblioteca integrada.
+
+  - **Dependência e ordem de execução**
+    - Este item é independente, porém diretamente relacionado ao TODO de
+      extensibilidade da DSL.
+    - Sua execução inicial DEVE ocorrer somente após o item anterior estar:
+      - implementado;
+      - normatizado no RCF principal;
+      - validado por testes;
+      - estabilizado quanto a sintaxe, manifestos, hooks, registro, vinculação,
+        descoberta, segurança e ciclo de vida.
+    - A norma NÃO DEVE antecipar, presumir ou consolidar contratos ainda não
+      implementados.
+    - Antes de redigi-la, inspecionar o estado final do:
+      - RCF da DSL;
+      - código implementado;
+      - gramática;
+      - parser e analisadores;
+      - sistema de tipos;
+      - runtime;
+      - contratos de integração;
+      - schemas;
+      - manifestos;
+      - adaptadores;
+      - hooks;
+      - testes;
+      - exemplos;
+      - documentação aplicável.
+    - Divergências entre norma e implementação DEVEM ser resolvidas na fonte
+      correta antes da publicação; a norma externa NÃO DEVE documentar
+      comportamento inexistente nem legitimar desvio da implementação.
+    - A conclusão inicial deste item NÃO encerra sua manutenção: a norma DEVE
+      permanecer vinculada ao ciclo de evolução do RCF e ser reavaliada sempre
+      que este, a implementação ou os contratos públicos da DSL forem alterados.
+
+  - **Artefato normativo**
+    - Criar documento normativo próprio, versionado e destinado ao repositório
+      da DSL, com nome semanticamente mais adequado que `RCF.md` para consumo
+      por bibliotecas integradoras.
+    - Adotar preferencialmente:
+
+      ```text
+      DSL-INTEGRATION-COMPLIANCE.md
+      ```
+
+    - O nome PODE ser ajustado às convenções documentais reais do repositório,
+      desde que expresse inequivocamente:
+      - integração com a DSL;
+      - conformidade normativa;
+      - aplicabilidade a bibliotecas externas.
+    - O documento DEVE funcionar como norma técnica de integração, e não como
+      tutorial informal, material promocional, README genérico ou duplicação do
+      RCF principal.
+    - Ele DEVE ser:
+      - autônomo para sua finalidade;
+      - aderente e subordinado ao RCF da DSL;
+      - normativo;
+      - determinístico;
+      - verificável;
+      - detalhado;
+      - incisivo;
+      - orientado prioritariamente ao consumo por IA;
+      - suficientemente claro para uso humano;
+      - acompanhado de exemplos delimitadores.
+    - O documento DEVE permitir que uma IA atuando no repositório de uma
+      biblioteca externa identifique, planeje, implemente, teste e documente o
+      acoplamento necessário sem depender de interpretações implícitas ou
+      explicações externas.
+    - O RCF principal da DSL DEVE mencionar e vincular diretamente essa norma
+      como referência oficial para implementação, validação e manutenção de
+      integrações externas.
+    - O `README.md` da DSL DEVE mencionar e vincular diretamente essa norma em
+      seção visível e semanticamente adequada, permitindo sua localização por
+      humanos e IAs sem pesquisa indireta pelo repositório.
+    - Os links DEVEM utilizar caminhos estáveis, relativos quando apropriado, e
+      permanecer válidos após reorganizações documentais ou alterações de nome.
+
+  - **Finalidade**
+    - Definir integralmente como uma biblioteca externa PODE tornar-se
+      compatível com a DSL mediante:
+      - manifestos;
+      - declarações de tipos;
+      - adaptadores;
+      - pontos de integração;
+      - exposição de APIs;
+      - extensões linguísticas;
+      - hooks;
+      - registro;
+      - descoberta;
+      - vinculação;
+      - validação;
+      - testes;
+      - distribuição dos artefatos de integração.
+    - A norma DEVE orientar a integração preservando simultaneamente:
+      - autonomia da DSL;
+      - autonomia da biblioteca externa;
+      - regras de negócio de ambas;
+      - segurança;
+      - compatibilidade;
+      - isolamento;
+      - resiliência;
+      - previsibilidade;
+      - baixo acoplamento;
+      - baixo custo de adaptação;
+      - mínimo impacto no build e no runtime.
+    - A biblioteca externa NÃO DEVE ser obrigada a:
+      - alterar regras de negócio;
+      - quebrar contratos públicos;
+      - abandonar sua arquitetura;
+      - incorporar a DSL ao próprio núcleo;
+      - tornar a DSL uma dependência obrigatória;
+      - expor APIs privadas;
+      - modificar comportamentos nativos;
+      - distribuir código desnecessário;
+      - assumir responsabilidades pertencentes ao runtime da DSL.
+    - Quando a integração exigir adaptação, priorizar, nesta ordem:
+      1. manifesto declarativo;
+      2. geração automatizada de metadados;
+      3. adaptador externo e desacoplado;
+      4. módulo opcional de integração;
+      5. alteração interna da biblioteca somente quando inevitável, segura e
+         compatível com suas próprias normas.
+
+  - **Precedência normativa**
+    - A norma DEVE declarar expressamente que:
+      - o RCF da DSL prevalece quanto ao contrato da DSL;
+      - as normas da biblioteca externa prevalecem quanto ao seu próprio
+        funcionamento interno;
+      - a integração existe na interseção compatível entre ambos os contratos;
+      - nenhuma parte PODE utilizar a integração para impor domínio normativo
+        sobre a outra.
+    - Em caso de incompatibilidade material:
+      - a integração DEVE ser adaptada;
+      - uma capacidade PODE deixar de ser exposta;
+      - um adaptador especializado PODE ser exigido;
+      - a integração DEVE ser recusada quando não houver solução compatível.
+    - É PROIBIDO resolver incompatibilidades:
+      - violando o RCF da DSL;
+      - alterando silenciosamente regras da biblioteca externa;
+      - ocultando limitações;
+      - simulando conformidade;
+      - desabilitando validações;
+      - expondo internals;
+      - contornando segurança;
+      - redefinindo recursos nativos.
+    - O núcleo da DSL mantém precedência absoluta sobre:
+      - sua gramática nativa;
+      - seus tokens;
+      - sua semântica;
+      - seus símbolos;
+      - seus tipos;
+      - sua execução;
+      - sua segurança;
+      - seus limites.
+    - Extensões externas somente PODEM complementar espaços normativamente
+      disponíveis.
+    - Havendo divergência entre esta norma de integração e o RCF da DSL, o RCF
+      prevalece, e a norma de integração DEVE ser corrigida antes de novo uso
+      normativo ou implementação baseada no trecho divergente.
+
+  - **Público e modo de consumo**
+    - Estruturar o documento para uso por:
+      - IAs de implementação;
+      - mantenedores de bibliotecas;
+      - autores de adaptadores;
+      - revisores;
+      - ferramentas de geração e validação.
+    - O texto DEVE:
+      - usar linguagem normativa consistente;
+      - distinguir obrigação, recomendação, permissão e proibição;
+      - evitar dependência de contexto tácito;
+      - definir todos os termos especializados;
+      - possuir referências internas estáveis;
+      - separar regras gerais de contratos especializados;
+      - fornecer ordem de execução;
+      - incluir critérios verificáveis;
+      - indicar entradas, saídas e artefatos esperados;
+      - exigir inspeção do estado real antes de modificar a biblioteca externa.
+    - Incluir instrução inicial à IA integradora para:
+      - ler integralmente a norma;
+      - identificar as normas locais do repositório externo;
+      - determinar precedências;
+      - mapear APIs e capacidades;
+      - detectar incompatibilidades;
+      - propor adaptação mínima;
+      - não inventar contratos;
+      - não alterar a biblioteca para facilitar a integração sem necessidade
+        comprovada.
+
+  - **Estrutura mínima da norma**
+    - Organizar o documento, conforme aplicável, nas seguintes áreas:
+      1. finalidade, escopo e fora de escopo;
+      2. terminologia e microconceitos;
+      3. precedência e responsabilidades;
+      4. modelo arquitetural de integração;
+      5. modalidades e níveis de conformidade;
+      6. identificação, aprovação e versionamento;
+      7. declarações de dependências;
+      8. manifestos e schemas;
+      9. tipos, APIs e símbolos;
+      10. adaptadores e exposição controlada;
+      11. extensões lexicais, sintáticas e semânticas;
+      12. hooks e alternância de processamento;
+      13. funções, classes, objetos e símbolos globais;
+      14. assincronismo, eventos, iteradores e streams;
+      15. descoberta, carregamento e vinculação;
+      16. navegador, Worker, processo e demais contextos;
+      17. segurança, permissões e isolamento;
+      18. erros, diagnósticos e fail-safe;
+      19. build, geração e distribuição;
+      20. compatibilidade e evolução;
+      21. manutenção e sincronização normativa;
+      22. validação, testes e certificação;
+      23. exemplos conformes e não conformes;
+      24. checklist de entrega;
+      25. relatório de conformidade.
+    - A estrutura PODE ser reorganizada quando outra ordem aumentar densidade,
+      clareza ou aderência ao RCF, sem omitir qualquer matéria aplicável.
+
+  - **Terminologia e microconceitos**
+    - Definir de forma curta, inequívoca e reutilizável, pelo menos:
+      - DSL;
+      - núcleo;
+      - biblioteca externa;
+      - integração;
+      - adaptador;
+      - manifesto;
+      - manifesto de tipos;
+      - manifesto de associação;
+      - extensão linguística;
+      - hook;
+      - símbolo exposto;
+      - símbolo global;
+      - dependência requerida;
+      - dependência opcional;
+      - descoberta;
+      - resolução;
+      - registro;
+      - vinculação;
+      - contexto de execução;
+      - capacidade;
+      - conformidade.
+    - Esses microconceitos DEVEM substituir repetições sem ocultar regras,
+      exceções ou responsabilidades.
+
+  - **Modalidades de integração**
+    - A norma DEVE distinguir pelo menos:
+      - **exposição de API**: métodos, funções, propriedades, objetos, classes,
+        tipos ou eventos;
+      - **integração declarativa**: capacidades descritas integralmente por
+        manifesto;
+      - **integração adaptada**: uso de camada que converte o contrato externo
+        para o contrato da DSL;
+      - **extensão linguística encapsulada**: recurso acessado por namespace ou
+        construção delimitada;
+      - **extensão linguística global**: sintaxe, notação ou símbolo disponível
+        sem namespace;
+      - **integração de build**: geração ou validação de artefatos sem presença
+        no runtime;
+      - **integração híbrida**: combinação controlada das modalidades
+        anteriores.
+    - Cada modalidade DEVE declarar:
+      - requisitos;
+      - artefatos;
+      - permissões;
+      - limitações;
+      - riscos;
+      - validações;
+      - testes obrigatórios.
+    - A biblioteca externa DEVE implementar apenas as modalidades necessárias
+      às capacidades que efetivamente pretende expor.
+
+  - **Níveis de conformidade**
+    - Definir níveis cumulativos ou perfis equivalentes para evitar que toda
+      biblioteca seja obrigada a implementar recursos desnecessários.
+    - Considerar, conforme aderência à implementação final:
+      - conformidade de tipos;
+      - conformidade de API;
+      - conformidade assíncrona;
+      - conformidade de eventos e fluxos;
+      - conformidade de extensão linguística;
+      - conformidade global;
+      - conformidade completa.
+    - Cada nível DEVE possuir:
+      - requisitos obrigatórios;
+      - recursos permitidos;
+      - testes;
+      - critérios de aprovação;
+      - declaração de capacidades.
+    - A ausência de um nível avançado NÃO DEVE invalidar uma integração que
+      declare corretamente um subconjunto inferior.
+
+  - **Preservação da biblioteca externa**
+    - A IA integradora DEVE identificar previamente:
+      - regras de negócio;
+      - contratos públicos;
+      - garantias;
+      - invariantes;
+      - arquitetura;
+      - ciclos de vida;
+      - modelos de erro;
+      - segurança;
+      - licenciamento;
+      - compatibilidade;
+      - requisitos de build;
+      - plataformas suportadas.
+    - A integração NÃO DEVE contrariar esses elementos.
+    - Havendo conflito, a IA DEVE:
+      - preservar a biblioteca;
+      - limitar a superfície exposta;
+      - criar adaptador;
+      - declarar incompatibilidade parcial;
+      - excluir capacidade inviável.
+    - É PROIBIDO modificar o núcleo da biblioteca externa apenas para adequá-lo
+      artificialmente ao modelo da DSL quando um adaptador resolver de forma
+      suficiente.
+    - Alterações internas inevitáveis DEVEM:
+      - ser mínimas;
+      - preservar comportamento anterior;
+      - permanecer opcionais;
+      - possuir testes próprios;
+      - ser documentadas;
+      - não afetar consumidores que não utilizem a DSL.
+
+  - **Mapeamento de capacidades**
+    - Exigir inventário explícito das capacidades externas candidatas à
+      exposição.
+    - Para cada capacidade, registrar:
+      - origem;
+      - finalidade;
+      - símbolo externo;
+      - representação na DSL;
+      - tipos;
+      - parâmetros;
+      - retorno;
+      - sincronismo;
+      - efeitos colaterais;
+      - mutabilidade;
+      - erros;
+      - permissões;
+      - ciclo de vida;
+      - riscos;
+      - modalidade de integração.
+    - A biblioteca externa NÃO PRECISA expor tudo o que implementa.
+    - Somente recursos materialmente necessários e aprovados DEVEM compor a
+      integração.
+    - Recursos privados, internos, experimentais ou instáveis NÃO DEVEM ser
+      expostos sem justificativa e marcação explícitas.
+
+  - **Manifesto de tipos**
+    - Normatizar a reutilização prioritária de:
+      - `.d.ts`;
+      - TypeScript Compiler API;
+      - declarações geradas automaticamente;
+      - formatos equivalentes consolidados.
+    - A norma DEVE especificar:
+      - informações obrigatórias;
+      - informações opcionais;
+      - elementos ignoráveis;
+      - regras de filtragem;
+      - tratamento de sobrecargas;
+      - tipos personalizados;
+      - genéricos;
+      - nulabilidade;
+      - assincronismo;
+      - classes;
+      - objetos;
+      - funções;
+      - propriedades;
+      - eventos.
+    - Nomes de parâmetros somente DEVEM ser exigidos quando possuírem função
+      semântica.
+    - O manifesto completo da biblioteca PODE ser utilizado, desde que a
+      integração identifique inequivocamente o subconjunto exposto.
+    - A norma DEVE proibir duplicação de tipos já obtidos de fonte confiável,
+      salvo transformação automatizada necessária.
+
+  - **Manifesto de associação**
+    - Definir schema normativo para complementar informações não representadas
+      pelo manifesto de tipos.
+    - O manifesto DEVE incluir, conforme a modalidade:
+      - identificação da integração;
+      - versões;
+      - compatibilidade;
+      - capacidades;
+      - símbolos expostos;
+      - símbolos globais;
+      - namespaces;
+      - aliases;
+      - sintaxes;
+      - regras lexicais;
+      - regras sintáticas;
+      - semântica;
+      - hooks;
+      - pontos de delegação;
+      - invocações;
+      - argumentos;
+      - retornos;
+      - erros;
+      - eventos;
+      - iteração;
+      - inicialização;
+      - cancelamento;
+      - descarte;
+      - permissões;
+      - efeitos colaterais;
+      - requisitos de disponibilidade.
+    - O manifesto complementar NÃO DEVE redefinir informações já presentes no
+      manifesto de tipos.
+    - O formato DEVE ser legível por máquina, validável por schema e aderente
+      aos formatos do repositório, preferencialmente JSON ou YAML.
+    - Incluir schema oficial e exemplos mínimos, intermediários e completos.
+
+  - **Extensões linguísticas**
+    - Explicar rigorosamente como uma biblioteca externa PODE adicionar:
+      - tokens;
+      - delimitadores;
+      - palavras-chave;
+      - operadores;
+      - expressões;
+      - declarações;
+      - blocos;
+      - tipos;
+      - construções declarativas;
+      - semânticas;
+      - símbolos globais.
+    - A norma DEVE exigir declaração explícita de:
+      - contexto válido;
+      - prioridade;
+      - precedência;
+      - associatividade;
+      - início e término;
+      - limites de consumo;
+      - estrutura produzida;
+      - semântica;
+      - tipos;
+      - runtime;
+      - erros;
+      - compatibilidade.
+    - A extensão NÃO PODE:
+      - redefinir sintaxe nativa;
+      - alterar significado existente;
+      - ocupar palavra reservada;
+      - produzir interpretação dependente da ordem de carregamento;
+      - capturar trechos fora de seu contrato.
+    - Em qualquer conflito, o núcleo prevalece.
+    - Extensões globais sem namespace DEVEM possuir justificativa técnica e
+      controles adicionais de colisão e rastreabilidade.
+
+  - **Hooks e alternância de processamento**
+    - Documentar o protocolo oficial para delegação parcial entre núcleo e
+      extensão.
+    - A norma DEVE permitir, quando suportado:
+
+      ```text
+      núcleo → extensão → núcleo → extensão → núcleo
+      ```
+
+    - Especificar:
+      - fases disponíveis;
+      - formato de entrada;
+      - formato de saída;
+      - contexto fornecido;
+      - contexto proibido;
+      - consumo de tokens;
+      - avanço do cursor;
+      - retorno ao núcleo;
+      - AST ou representação intermediária;
+      - tipos;
+      - diagnósticos;
+      - cancelamento;
+      - limites;
+      - falhas.
+    - A extensão DEVE processar somente o trecho atribuído.
+    - Ela NÃO DEVE:
+      - acessar internals irrestritos;
+      - retroceder arbitrariamente;
+      - interceptar sintaxe nativa;
+      - delegar em ciclo;
+      - alterar trechos consolidados;
+      - manter controle além do ponto autorizado.
+    - Incluir exemplos de:
+      - delegação lexical;
+      - delegação sintática;
+      - complemento semântico;
+      - construção intercalada;
+      - falha controlada;
+      - resposta inválida.
+
+  - **Escopo global**
+    - Normatizar a exposição de:
+      - funções;
+      - classes;
+      - objetos;
+      - constantes;
+      - tipos;
+      - operadores;
+      - sintaxes;
+      - gatilhos.
+    - Recursos globais DEVEM:
+      - estar declarados;
+      - ser aprovados;
+      - possuir origem identificável;
+      - ser vinculados ao contexto;
+      - evitar colisões;
+      - respeitar a precedência do núcleo.
+    - O documento DEVE diferenciar:
+      - global da DSL;
+      - global da página;
+      - global do Worker;
+      - global do processo;
+      - global do módulo ou instância.
+    - A integração NÃO DEVE assumir que `globalThis`, `window`, escopo da DSL e
+      escopo interno da biblioteca são equivalentes.
+
+  - **Descoberta, registro e vinculação**
+    - Especificar como a biblioteca externa DEVE:
+      - tornar-se descobrível;
+      - fornecer identificação estável;
+      - apresentar manifestos;
+      - expor versão;
+      - declarar capacidades;
+      - vincular implementação e adaptador.
+    - A descoberta DEVE ocorrer uma única vez por dependência e contexto
+      compatível, salvo invalidação normatizada.
+    - A norma DEVE explicar como múltiplas instâncias da DSL reutilizam:
+      - estado de descoberta;
+      - carregamento;
+      - validação;
+      - manifesto;
+      - adaptador;
+      - compatibilidade.
+    - Definir estados oficiais, como:
+      - não resolvida;
+      - aguardando carregamento;
+      - disponível;
+      - incompatível;
+      - ausente;
+      - falha;
+      - descartada.
+    - A biblioteca externa DEVE oferecer os sinais mínimos necessários para que
+      o ambiente hospedeiro ou a DSL determine esses estados sem sondagem
+      arbitrária recorrente.
+
+  - **Carregamento dinâmico**
+    - Para navegador, definir como a integração PODE sinalizar carregamento por:
+      - Promise;
+      - callback;
+      - evento;
+      - hook de bootstrap;
+      - loader;
+      - registro explícito.
+    - A norma NÃO DEVE exigir framework específico.
+    - Callbacks ou hooks de disponibilidade DEVEM:
+      - executar no máximo uma vez por contexto e versão;
+      - ser idempotentes;
+      - evitar polling;
+      - permitir descarte;
+      - diferenciar carregamento pendente de ausência.
+    - A análise de manifestos embutidos no script NÃO DEVE exigir que a
+      implementação externa já esteja carregada.
+    - A exigibilidade definitiva de dependência requerida DEVE ocorrer antes do
+      uso material, mas somente depois de haver condição confiável para
+      determinar sua disponibilidade.
+
+  - **APIs, eventos e fluxos**
+    - Definir padrões para:
+      - chamadas síncronas;
+      - Promises;
+      - callbacks;
+      - eventos;
+      - listeners;
+      - iteradores;
+      - iteradores assíncronos;
+      - streams;
+      - observables, quando suportados;
+      - cancelamento;
+      - descarte.
+    - A norma DEVE indicar quando:
+      - a biblioteca materializa o resultado;
+      - a DSL controla a iteração;
+      - ocorre intermediação passo a passo.
+    - Para fluxos intermediados, exigir:
+      - inicialização;
+      - avanço;
+      - estado;
+      - término;
+      - erro;
+      - cancelamento;
+      - descarte.
+    - Preferir formatos JavaScript consolidados quando o runtime final for
+      client-side, sem exigir que a biblioteca externa seja implementada em
+      JavaScript.
+
+  - **Segurança**
+    - Definir modelo de exposição mínima e negação por padrão.
+    - Proibir:
+      - acesso irrestrito ao objeto externo;
+      - acesso aos internals da DSL;
+      - `eval`;
+      - execução arbitrária;
+      - mutação global não controlada;
+      - instalação ou download pela DSL;
+      - carregamento por URL solicitado pelo script;
+      - concessão implícita de permissões;
+      - confiança em `.d.ts` como mecanismo de segurança.
+    - Exigir declaração de:
+      - capacidades sensíveis;
+      - acesso a DOM;
+      - rede;
+      - armazenamento;
+      - sistema de arquivos;
+      - processos;
+      - recursos nativos;
+      - efeitos colaterais.
+    - O adaptador DEVE limitar o acesso ao subconjunto aprovado.
+    - Falhas externas DEVEM ser isoladas e convertidas ao modelo de erros da
+      DSL.
+
+  - **Build e distribuição**
+    - Definir quais artefatos a biblioteca externa DEVE ou PODE distribuir:
+      - manifesto de tipos;
+      - manifesto de associação;
+      - schema;
+      - adaptador;
+      - módulo opcional;
+      - testes de conformidade;
+      - metadados de versão.
+    - A integração DEVE permanecer opcional para consumidores comuns da
+      biblioteca.
+    - Ferramentas open source de geração ou validação PODEM ser recomendadas
+      quando:
+      - forem mantidas;
+      - forem estáveis;
+      - forem auditáveis;
+      - não forem exigidas em runtime;
+      - produzirem artefatos interoperáveis.
+    - O documento DEVE distinguir claramente:
+      - dependência de desenvolvimento;
+      - dependência de build;
+      - dependência da integração;
+      - dependência de runtime;
+      - biblioteca integrada.
+    - A DSL NÃO DEVE ser incorporada ao bundle da biblioteca externa apenas
+      para gerar compatibilidade.
+
+  - **Versionamento e compatibilidade**
+    - Definir:
+      - versão do contrato;
+      - versão do manifesto;
+      - versão da integração;
+      - versão da biblioteca externa;
+      - versões da DSL suportadas;
+      - capacidades opcionais;
+      - depreciações;
+      - incompatibilidades.
+    - Mudanças incompatíveis DEVEM ser detectáveis antes da execução.
+    - A norma DEVE impedir que a compatibilidade dependa apenas de comparação
+      textual de versões quando capacidades declaradas forem mais precisas.
+    - Extensões linguísticas DEVEM declarar compatibilidade com gramática,
+      parser e protocolo de hooks.
+
+  - **Manutenção e sincronização normativa contínuas**
+    - A norma de integração DEVE ser tratada como projeção especializada e
+      subordinada do RCF da DSL, e não como documento estático ou independente
+      de sua evolução.
+    - Toda alteração no RCF, na implementação ou nos contratos públicos da DSL
+      DEVE incluir análise explícita de impacto sobre essa norma.
+    - A análise DEVE verificar, conforme aplicável:
+      - terminologia;
+      - precedências;
+      - sintaxe;
+      - gramática;
+      - tipos;
+      - manifestos;
+      - schemas;
+      - adaptadores;
+      - hooks;
+      - símbolos globais;
+      - descoberta;
+      - carregamento;
+      - registro;
+      - vinculação;
+      - segurança;
+      - erros;
+      - ciclo de vida;
+      - testes;
+      - exemplos;
+      - critérios de conformidade.
+    - Quando houver impacto, a norma, seus schemas, modelos, exemplos, testes e
+      referências DEVEM ser atualizados no mesmo ciclo de alteração ou antes da
+      disponibilização da mudança afetada.
+    - Quando não houver impacto, essa conclusão DEVE ser registrada de forma
+      rastreável no relatório, FT, issue, commit, changelog ou mecanismo
+      equivalente adotado pelo repositório.
+    - A revisão NÃO DEVE limitar-se à substituição textual de versões; DEVE
+      confirmar coerência normativa, semântica e operacional entre:
+      - RCF;
+      - norma de integração;
+      - implementação;
+      - schemas;
+      - testes;
+      - exemplos;
+      - documentação pública.
+    - É PROIBIDO manter instrução obsoleta por compatibilidade documental quando
+      ela puder induzir integração incorreta ou insegura.
+    - Regras removidas, substituídas ou depreciadas DEVEM possuir tratamento
+      explícito de migração, compatibilidade e versionamento quando ainda forem
+      relevantes para integrações existentes.
+    - Alterações incompatíveis DEVEM:
+      - atualizar a versão normativa aplicável;
+      - indicar impacto;
+      - fornecer orientação de migração;
+      - identificar integrações potencialmente afetadas;
+      - atualizar os testes de conformidade.
+    - A norma DEVE indicar claramente:
+      - versão do RCF à qual está aderente;
+      - versão do contrato de integração;
+      - data ou identificador da última revisão normativa;
+      - estado de estabilidade;
+      - depreciações vigentes.
+    - Sempre que tecnicamente viável, validações automatizadas DEVEM verificar:
+      - existência dos links no RCF e no `README.md`;
+      - consistência das versões referenciadas;
+      - validade dos schemas;
+      - atualização dos exemplos;
+      - ausência de referências a contratos removidos;
+      - correspondência entre requisitos normativos e testes contratuais.
+    - A norma NÃO DEVE exigir replicação integral do RCF; referências internas
+      ou diretas DEVEM substituir duplicação quando preservarem autonomia de
+      consumo, clareza e estabilidade.
+    - Quando uma regra do RCF for indispensável para a integração e não puder
+      ser compreendida isoladamente por referência, ela DEVE ser condensada ou
+      contextualizada na norma sem alterar seu significado.
+    - O RCF DEVE indicar que alterações relacionadas à extensibilidade,
+      integrações externas ou contratos associados exigem revisão desta norma.
+    - O `README.md` DEVE apresentar a norma como referência vigente para autores
+      de bibliotecas, adaptadores e extensões externas, sem descrevê-la como
+      documentação opcional ou meramente complementar.
+
+  - **Exemplos normativos**
+    - Incluir exemplos completos e reduzidos de:
+      - exposição de uma função;
+      - exposição de objeto ou classe;
+      - integração com dependência requerida;
+      - integração com dependência opcional;
+      - detecção de disponibilidade;
+      - manifesto de tipos reutilizado;
+      - manifesto complementar mínimo;
+      - adaptador desacoplado;
+      - evento;
+      - Promise;
+      - iterador;
+      - extensão encapsulada;
+      - função global;
+      - sintaxe global;
+      - hook intercalado com o núcleo;
+      - carregamento dinâmico;
+      - incompatibilidade;
+      - erro controlado.
+    - Cada exemplo DEVE indicar:
+      - o que é obrigatório;
+      - o que é opcional;
+      - por que é conforme;
+      - limites do exemplo.
+    - Incluir contraexemplos para:
+      - sobrescrita de sintaxe nativa;
+      - exposição irrestrita;
+      - duplicação de `.d.ts`;
+      - dependência obrigatória da DSL;
+      - polling recorrente;
+      - manifesto divergente;
+      - acesso a internals;
+      - extensão global conflitante.
+    - Exemplos NÃO DEVEM introduzir requisitos não previstos na norma.
+
+  - **Schemas e artefatos auxiliares**
+    - Produzir, quando compatível com o repositório:
+      - schema oficial do manifesto;
+      - modelo mínimo;
+      - modelo completo;
+      - checklist de conformidade;
+      - matriz de capacidades;
+      - relatório padrão de integração.
+    - Os schemas DEVEM ser:
+      - versionados;
+      - determinísticos;
+      - validáveis;
+      - compatíveis com automação;
+      - referenciados pela norma.
+    - Evitar duplicar no Markdown regras que possam ser verificadas diretamente
+      pelo schema; o documento DEVE explicar a semântica e referenciar a
+      validação estrutural.
+    - Alterações em schemas ou artefatos auxiliares DEVEM permanecer
+      sincronizadas com a norma, o RCF e os testes de conformidade.
+
+  - **Processo obrigatório para a IA integradora**
+    - A norma DEVE fornecer sequência executável equivalente a:
+      1. ler as normas da biblioteca externa;
+      2. ler esta norma;
+      3. identificar precedências;
+      4. confirmar a versão do RCF e do contrato atendidos;
+      5. inventariar capacidades;
+      6. selecionar modalidade e nível de conformidade;
+      7. mapear tipos e APIs;
+      8. identificar lacunas semânticas;
+      9. reutilizar manifestos existentes;
+      10. criar apenas complementos necessários;
+      11. implementar adaptador mínimo;
+      12. validar segurança e conflitos;
+      13. gerar artefatos;
+      14. executar testes;
+      15. produzir relatório.
+    - A IA NÃO DEVE iniciar alterações antes de compreender:
+      - arquitetura;
+      - contratos;
+      - regras de negócio;
+      - build;
+      - distribuição;
+      - compatibilidade.
+    - Quando uma informação não puder ser inferida com segurança, a IA DEVE
+      inspecionar a implementação real ou deixar a decisão condicionada, sem
+      converter hipótese em fato.
+
+  - **Testes de conformidade**
+    - Definir suíte mínima reutilizável para validar:
+      - manifesto;
+      - schema;
+      - tipos;
+      - exposição;
+      - disponibilidade;
+      - compatibilidade;
+      - hooks;
+      - símbolos globais;
+      - erros;
+      - isolamento;
+      - cancelamento;
+      - descarte;
+      - ausência de regressões.
+    - Sempre que viável, fornecer testes contratuais executáveis pela biblioteca
+      externa sem incorporar o runtime completo da DSL ao produto final.
+    - Testes DEVEM confirmar que:
+      - a biblioteca continua funcional sem a integração;
+      - consumidores comuns não recebem código da DSL;
+      - somente recursos aprovados são expostos;
+      - o adaptador não altera regras de negócio;
+      - a integração falha com segurança;
+      - o núcleo mantém precedência;
+      - manifestos e implementação permanecem coerentes.
+    - A suíte DEVE ser revisada sempre que o RCF ou a norma alterarem qualquer
+      contrato verificável.
+    - Nenhuma atualização normativa DEVE ser considerada concluída enquanto os
+      testes correspondentes permanecerem incompatíveis, ausentes ou
+      desatualizados.
+
+  - **Declaração de conformidade**
+    - Definir formato padrão para a biblioteca externa declarar:
+      - norma e versão atendidas;
+      - versão do RCF de referência;
+      - nível de conformidade;
+      - modalidades implementadas;
+      - capacidades expostas;
+      - artefatos fornecidos;
+      - versões compatíveis;
+      - limitações;
+      - permissões;
+      - testes executados;
+      - desvios conhecidos.
+    - A declaração NÃO DEVE alegar conformidade total quando apenas subconjunto
+      tiver sido implementado.
+    - Exceções e limitações DEVEM ser explícitas e verificáveis.
+    - Alterações da norma que afetem uma declaração existente DEVEM permitir
+      identificar se a integração continua conforme, requer nova validação ou
+      necessita migração.
+
+  - **Critérios de aceite**
+    - Considerar a criação inicial concluída somente quando:
+      - o suporte de extensibilidade anterior estiver finalizado e estável;
+      - o documento normativo possuir nome definitivo;
+      - o RCF mencionar e vincular diretamente a norma;
+      - o `README.md` mencionar e vincular diretamente a norma;
+      - os links forem válidos, estáveis e verificáveis;
+      - a norma refletir exatamente os contratos implementados;
+      - a precedência entre DSL e biblioteca externa estiver inequívoca;
+      - a preservação das regras de negócio externas estiver normatizada;
+      - modalidades e níveis de conformidade estiverem definidos;
+      - manifestos, tipos, adaptadores, hooks e extensões globais estiverem
+        integralmente cobertos;
+      - carregamento, descoberta, registro e vinculação estiverem normatizados;
+      - segurança, erros, versionamento e compatibilidade estiverem cobertos;
+      - schemas e modelos necessários estiverem disponíveis;
+      - houver exemplos conformes e não conformes;
+      - houver checklist e relatório padrão;
+      - uma IA externa consiga implementar integração correta usando apenas a
+        norma, os artefatos referenciados e o estado real da biblioteca;
+      - a integração resultante não exija violação das normas da DSL nem da
+        biblioteca externa;
+      - a documentação esteja validada contra pelo menos uma integração de
+        referência ou caso de teste representativo.
+    - Considerar a manutenção contínua conforme somente quando:
+      - toda alteração relevante do RCF possuir análise de impacto registrada;
+      - norma, schemas, exemplos e testes estiverem sincronizados;
+      - versões e referências cruzadas estiverem coerentes;
+      - links no RCF e no `README.md` permanecerem válidos;
+      - depreciações e migrações estiverem documentadas;
+      - não houver contrato implementado sem cobertura normativa aplicável;
+      - não houver regra normativa obsoleta contradizendo o RCF ou a
+        implementação.
